@@ -1,0 +1,20 @@
+<!doctype html>
+<html class="h-full bg-[#0e0e10]" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdn.bitinflow.com/fontawesome/6.2.0/css/all.min.css"
+          integrity="sha384-a/J8ePf6YlZ5aBQ6xmsPiCGV52z4VJMixEqX+4Mvoxi8flAWQA00ZFtk5qO5vyrP" crossorigin="anonymous">
+    <title>OBS Workbench</title>
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; font-src https://cdn.bitinflow.com; style-src 'self' 'unsafe-inline' https://cdn.bitinflow.com; img-src 'self' data:; connect-src 'self' ws: wss:"
+    />
+  </head>
+
+  <body class="h-full">
+    <div id="app" class="h-full"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
