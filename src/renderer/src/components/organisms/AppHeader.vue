@@ -1,19 +1,12 @@
 <template>
   <div class="md:flex md:items-center md:justify-between md:space-x-5">
     <div class="flex shrink-0 items-start space-x-5">
-      <div class="flex-shrink-0">
-        <div class="relative">
-          <div class="h-16 w-16 rounded-full bg-primary-500" />
-          <span class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></span>
-        </div>
-      </div>
-      <!--
-        Use vertical padding to simulate center alignment when both lines of text are one line,
-        but preserve the same layout if the text wraps without making the image jump around.
-      -->
-      <div class="pt-1.5">
-        <h1 class="text-2xl font-bold text-zinc-100">Anonymous</h1>
-        <p class="text-sm font-medium text-zinc-500">Connected to <b class="text-zinc-400">{{ store.url }}</b>
+      <div>
+        <h1 class="text-2xl font-bold text-zinc-100">
+          Anonymous
+        </h1>
+        <p class="text-sm font-medium text-zinc-500">
+          Connected to <b class="text-zinc-400">{{ store.url }}</b>
         </p>
       </div>
     </div>

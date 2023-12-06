@@ -1,38 +1,44 @@
 <template>
-  <nav class="flex flex-1 flex-col" aria-label="Sidebar">
-    <ul role="list" class="-mx-2 space-y-1">
+  <nav
+    class="flex w-full flex-col"
+    aria-label="Sidebar"
+  >
+    <ul
+      role="list"
+      class="-mx-2 space-y-1"
+    >
       <template
-          v-for="item in items"
-          :key="item.sceneName"
+        v-for="item in items"
+        :key="item.sceneName"
       >
         <li
-            v-if="!item.sceneName.startsWith('!')"
+          v-if="!item.sceneName.startsWith('!')"
         >
           <a
-              href="#"
-              @click.prevent="updatePreviewScene(item.sceneName)"
-              :class="['group flex justify-between gap-x-3 rounded-md p-2 px-3 text-sm leading-6 font-semibold', {
+            href="#"
+            :class="['group flex justify-between gap-x-3 rounded-md p-2 px-3 text-sm leading-6 font-semibold', {
               'bg-primary-500 text-white': store.currentPreviewSceneName === item.sceneName,
               'text-white hover:bg-zinc-800': store.currentPreviewSceneName !== item.sceneName,
             }]"
+            @click.prevent="updatePreviewScene(item.sceneName)"
           >
             <div>
               {{ item.sceneName }}
             </div>
             <div class="flex gap-3 items-center">
               <i
-                  v-if="store.currentProgramSceneName === item.sceneName"
-                  :class="['fas fa-signal-stream', {
-                    'text-primary-500': store.currentPreviewSceneName !== item.sceneName,
-                    'text-white': store.currentPreviewSceneName === item.sceneName,
-                  }]"
+                v-if="store.currentProgramSceneName === item.sceneName"
+                :class="['fas fa-signal-stream', {
+                  'text-primary-500': store.currentPreviewSceneName !== item.sceneName,
+                  'text-white': store.currentPreviewSceneName === item.sceneName,
+                }]"
               />
               <button
-                  type="button"
-                  class="text-white/50 hover:text-zinc-100"
-                  @click.stop="scene.removeScene(item.sceneName)"
+                type="button"
+                class="text-white/50 hover:text-zinc-100"
+                @click.stop="scene.removeScene(item.sceneName)"
               >
-                <i class="fas fa-trash"></i>
+                <i class="fas fa-trash" />
               </button>
             </div>
           </a>

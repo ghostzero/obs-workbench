@@ -4,32 +4,43 @@
       <div class="flex-1 w-[1/2]">
         <AppSectionTitle>Preview: {{ store.currentPreviewSceneName }}</AppSectionTitle>
         <div class="relative mt-4">
+          <!--suppress RequiredAttributes -->
           <img
-              alt="preview"
-              ref="previewImage"
-              class="absolute bg-black aspect-[16/9] w-full rounded-md shadow z-20">
+            ref="previewImage"
+            alt="preview"
+            class="absolute bg-black aspect-[16/9] w-full rounded-md shadow z-20"
+          >
+          <!--suppress RequiredAttributes -->
           <img
-              alt="preview ambient"
-              ref="previewAmbientImage"
-              class="bg-black aspect-[16/9] w-full rounded-md blur-lg z-10">
+            ref="previewAmbientImage"
+            alt="preview ambient"
+            class="bg-black aspect-[16/9] w-full rounded-md blur-[7px] z-10"
+          >
         </div>
       </div>
       <div class="self-center flex flex-col gap-3 z-30">
-        <AppButton @click="transition" class="mt-[44px]">
-          <i class="fas fa-arrow-right-arrow-left"></i>
+        <AppButton
+          class="mt-[44px]"
+          @click="transition"
+        >
+          <i class="fas fa-arrow-right-arrow-left" />
         </AppButton>
       </div>
       <div class="flex-1 w-[1/2]">
         <AppSectionTitle>Program: {{ store.currentProgramSceneName }}</AppSectionTitle>
         <div class="relative mt-4">
+          <!--suppress RequiredAttributes -->
           <img
-              alt="program"
-              ref="programImage"
-              class="absolute bg-black aspect-[16/9] w-full rounded-md shadow z-20">
+            ref="programImage"
+            alt="program"
+            class="absolute bg-black aspect-[16/9] w-full rounded-md shadow z-20"
+          >
+          <!--suppress RequiredAttributes -->
           <img
-              alt="program ambient"
-              ref="programAmbientImage"
-              class="bg-black aspect-[16/9] w-full rounded-md blur-lg z-10">
+            ref="programAmbientImage"
+            alt="program ambient"
+            class="bg-black aspect-[16/9] w-full rounded-md blur-[7px] z-10"
+          >
         </div>
       </div>
     </div>
@@ -37,11 +48,11 @@
 </template>
 
 <script setup lang="ts">
-import AppButton from '../atoms/AppButton.vue'
 import { useObs } from '../../composables/useObs'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useAppStore } from '../../store/app'
 import AppSectionTitle from '../atoms/AppSectionTitle.vue'
+import AppButton from '../atoms/AppButton.vue'
 
 const {obs} = useObs()
 const store = useAppStore()

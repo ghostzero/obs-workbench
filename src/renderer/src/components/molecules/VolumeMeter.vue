@@ -1,5 +1,5 @@
 <template>
-  <div class="h-[280px] w-20 flex flex-col rounded p-1">
+  <div class="w-20 flex flex-col rounded p-1">
     <div class="text-center">
       <div class="text-xs truncate">
         {{ props.volumeMeter.inputName }}
@@ -11,7 +11,7 @@
     <div class="flex-1 py-2">
       <div class="h-full flex justify-center gap-0.5">
         <template
-            v-for="inputLevels in props.volumeMeter.inputLevelsMul"
+          v-for="inputLevels in props.volumeMeter.inputLevelsMul"
         >
           <InputLevel :input-levels="inputLevels" />
         </template>
@@ -24,23 +24,25 @@
         </div>
         <div class="pl-4 w-8 flex justify-center">
           <input
-              class="volume-vertical accent-primary-500"
-              type="range"
-              orient="vertical"
-              min="0" max="100" step="0.1"
-              v-model="inputLevel"
-              @input="updateInputLevel($event)"
-          />
+            v-model="inputLevel"
+            class="volume-vertical accent-primary-500"
+            type="range"
+            orient="vertical"
+            min="0"
+            max="100"
+            step="0.1"
+            @input="updateInputLevel($event)"
+          >
         </div>
       </div>
     </div>
     <div class="text-center">
       <i
-          :class="['fas fa-fw', {
-            'fa-volume-up': !input.inputMuted,
-            'fa-volume-mute text-primary-500': input.inputMuted,
-          }]"
-      ></i>
+        :class="['fas fa-fw', {
+          'fa-volume-up': !input.inputMuted,
+          'fa-volume-mute text-primary-500': input.inputMuted,
+        }]"
+      />
     </div>
   </div>
 </template>

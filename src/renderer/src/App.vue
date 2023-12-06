@@ -1,35 +1,45 @@
 <template>
   <div
-    class='min-h-full select-none'
+    class="min-h-full select-none"
     @contextmenu.prevent
   >
     <AppPopups />
     <AppNotifications />
-    <template v-if='store.connected'>
-      <main class='flex flex-col gap-4 px-8 py-4 h-screen'>
+    <template v-if="store.connected">
+      <main class="flex flex-col gap-4 px-8 py-4 h-screen">
         <AppHeader />
 
-        <div class='flex-auto'>
+        <div class="flex-auto">
           <Glayout
-            ref='GLayoutRoot'
-            glc-path='./'
-            class='h-full w-full'
-          ></Glayout>
+            ref="GLayoutRoot"
+            :component-types="componentTypes"
+            class="h-full w-full"
+          />
         </div>
 
         <footer>
-          <div class='mx-auto'>
+          <div class="mx-auto">
             <div
-              class='text-center text-sm text-gray-500 sm:text-left'
+              class="text-center text-sm text-gray-500 sm:text-left"
             >
-            <span class='block sm:inline'>
-              &copy; 2023 René Preuß. All rights reserved. Running OBS Websocket
-              <button type='button' @click='onClickAddGLComponent1'>create</button>
-              <button type='button' @click='onClickSaveLayout'>save</button>
-              {{ store.version.obsWebSocketVersion }} on OBS Studio
-              {{ store.version.obsVersion }} on
-              {{ store.version.platformDescription }}.
-            </span>
+              <span class="block sm:inline">
+                &copy; 2023 René Preuß. All rights reserved. Running OBS Websocket
+                <button
+                  type="button"
+                  @click="onClickAddGLComponent1"
+                >create</button>
+                <button
+                  type="button"
+                  @click="onClickSaveLayout"
+                > save</button>
+                <button
+                  type="button"
+                  @click="onClickResetLayout"
+                > reset</button>
+                {{ store.version.obsWebSocketVersion }} on OBS Studio
+                {{ store.version.obsVersion }} on
+                {{ store.version.platformDescription }}.
+              </span>
             </div>
           </div>
         </footer>
@@ -38,50 +48,82 @@
   </div>
 </template>
 
-<script setup lang='ts'>
+<script setup lang="ts">
 import AppHeader from './components/organisms/AppHeader.vue'
 
 import { useAppStore } from './store/app'
 import AppPopups from './components/organisms/AppPopups.vue'
 import AppNotifications from './components/organisms/AppNotifications.vue'
 import Glayout from './components/Glayout.vue'
-import { onMounted, ref } from 'vue'
+import { markRaw, onMounted, ref } from 'vue'
 
 import 'golden-layout/dist/css/goldenlayout-base.css'
 import 'golden-layout/dist/css/themes/goldenlayout-dark-theme.css'
 import { LayoutConfig } from 'golden-layout'
+import { useWaitForRef } from './composables/useWaitForComponent'
+import SceneItemList from './components/docks/SceneItemList.vue'
+import SceneList from './components/docks/SceneList.vue'
+import StudioView from './components/docks/StudioView.vue'
+import AudioMixer from './components/docks/AudioMixer.vue'
 
 const store = useAppStore()
 const GLayoutRoot = ref<null | typeof Glayout>(null)
 
-const onClickAddGLComponent1 = () => {
-  if (!GLayoutRoot.value) return
-  GLayoutRoot.value.addGLComponent('Content1', 'Title 1st')
+const componentTypes = {
+  Sources: markRaw(SceneItemList),
+  Scenes: markRaw(SceneList),
+  Main: markRaw(StudioView),
+  AudioMixer: markRaw(AudioMixer),
 }
 
-onMounted(() => {
-  if (!GLayoutRoot.value) return
-  onClickLoadLayout() //
+const onClickAddGLComponent1 = async () => {
+  const layout = await useWaitForRef<typeof Glayout>(GLayoutRoot)
+  // layout.addGLComponent('SceneBui', 'Scene Builder')
+}
+
+onMounted(async () => {
+  await onClickLoadLayout() //
 })
 
-const onClickSaveLayout = () => {
-  if (!GLayoutRoot.value) return
-  const config = GLayoutRoot.value.getLayoutConfig()
+const onClickSaveLayout = async () => {
+  const layout = await useWaitForRef<typeof Glayout>(GLayoutRoot)
+  const config = layout.getLayoutConfig()
+  console.log('save', config)
   localStorage.setItem('gl_config', JSON.stringify(config))
 }
 
-const onClickLoadLayout = () => {
+const onClickResetLayout = () => {
+  localStorage.removeItem('gl_config')
+}
+
+const onLoadNewLayout = async () => {
+  const layout = await useWaitForRef<typeof Glayout>(GLayoutRoot)
+  layout.addGLComponent('Sources', 'Sources')
+  layout.addGLComponent('Scenes', 'Scenes')
+  layout.addGLComponent('Main', '')
+  layout.addGLComponent('AudioMixer', 'Audio Mixer')
+}
+
+const onClickLoadLayout = async () => {
+  const layout = await useWaitForRef<typeof Glayout>(GLayoutRoot)
+
   const str = localStorage.getItem('gl_config')
-  if (!str) return
-  if (!GLayoutRoot.value) return
+  if (!str) {
+    layout.addGLComponent('Sources', 'Sources')
+    layout.addGLComponent('Scenes', 'Scenes')
+    layout.addGLComponent('Main', '')
+    layout.addGLComponent('AudioMixer', 'Audio Mixer')
+    return
+  }
+
   const config = JSON.parse(str as string) as LayoutConfig
   config.header = {
     ...config.header,
     maximise: false,
-    popout: false,
+    popout: false
   }
   console.log(config)
-  GLayoutRoot.value.loadGLLayout(config)
+  layout.loadGLLayout(config)
 }
 
 </script>
@@ -131,5 +173,9 @@ const onClickLoadLayout = () => {
 
 .lm_tab:hover, .lm_tab.lm_active {
   opacity: 0.4;
+}
+
+.lm_header .lm_tab .lm_title {
+  padding-left: 4px;
 }
 </style>

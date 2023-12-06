@@ -14,8 +14,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
-
 const $emit = defineEmits(['update:modelValue'])
 
 const props = defineProps({

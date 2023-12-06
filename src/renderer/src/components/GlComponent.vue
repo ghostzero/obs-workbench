@@ -1,7 +1,12 @@
 <template>
-    <div ref="GLComponent" style="position: absolute; overflow: hidden" class='p-3 text-white'>
-        <slot />
+  <div
+    ref="GLComponent"
+    class="absolute overflow-hidden p-2 text-white h-full"
+  >
+    <div class="h-full px-3 py-2 overflow-x-hidden overflow-y-auto">
+      <slot />
     </div>
+  </div>
 </template>
 
 <script setup lang="ts">
