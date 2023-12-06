@@ -1,16 +1,16 @@
 <template>
   <button
-      :type="props.type"
-      :class="['flex relative items-center justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600', {
+    :type="props.type"
+    :class="['flex relative items-center justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600', {
     'bg-primary-500 hover:bg-primary-400': props.variant === 'solid',
     'bg-zinc-800 hover:bg-zinc-700': props.variant === 'ghost',
     'bg-zinc-800 hover:bg-zinc-700 ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary-500': props.variant === 'outline',
     'cursor-not-allowed': props.loading,
   }]"
-      :disabled="props.loading"
+    :disabled="props.loading"
   >
     <span
-        :class="{
+      :class="{
        'opacity-30': props.loading,
        'opacity-100': !props.loading,
      }"
@@ -19,8 +19,8 @@
     </span>
     <!-- spinner overlay -->
     <span
-        v-if="props.loading"
-        class="absolute inset-0 flex items-center justify-center"
+      v-if="props.loading"
+      class="absolute inset-0 flex items-center justify-center"
     >
       <span class="w-4 h-4 text-white">
         <i class="fal fa-spin fa-spinner-third"></i>
@@ -33,15 +33,15 @@
 const props = defineProps({
   type: {
     type: String,
-    default: 'button',
+    default: 'button'
   },
   variant: {
     type: String,
-    default: 'solid',
+    default: 'solid'
   },
   loading: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 })
 </script>
