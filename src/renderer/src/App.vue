@@ -57,16 +57,16 @@ import AppNotifications from './components/organisms/AppNotifications.vue'
 import Glayout from './components/Glayout.vue'
 import { markRaw, onMounted, ref } from 'vue'
 
-import 'golden-layout/dist/css/goldenlayout-base.css'
-import 'golden-layout/dist/css/themes/goldenlayout-dark-theme.css'
 import { LayoutConfig } from 'golden-layout'
 import { useWaitForRef } from './composables/useWaitForComponent'
 import SceneItemList from './components/docks/SceneItemList.vue'
 import SceneList from './components/docks/SceneList.vue'
 import StudioView from './components/docks/StudioView.vue'
 import AudioMixer from './components/docks/AudioMixer.vue'
+import { useNotificationStore } from './store/notification'
 
 const store = useAppStore()
+const { success } = useNotificationStore()
 const GLayoutRoot = ref<null | typeof Glayout>(null)
 
 const componentTypes = {
@@ -88,8 +88,12 @@ onMounted(async () => {
 const onClickSaveLayout = async () => {
   const layout = await useWaitForRef<typeof Glayout>(GLayoutRoot)
   const config = layout.getLayoutConfig()
-  console.log('save', config)
   localStorage.setItem('gl_config', JSON.stringify(config))
+  success({
+    type: 'success',
+    title: 'Layout saved',
+    message: 'The layout has been saved'
+  })
 }
 
 const onClickResetLayout = () => {
@@ -125,57 +129,4 @@ const onClickLoadLayout = async () => {
   console.log(config)
   layout.loadGLLayout(config)
 }
-
 </script>
-
-<style>
-.lm_tab {
-  border-radius: 4px;
-}
-
-.lm_header .lm_tab {
-  box-shadow: unset !important;
-  background: #18181b;
-}
-
-.lm_dropTargetIndicator {
-  box-shadow: unset;
-  outline: 1px solid #9146FF;
-  border-radius: 4px;
-  @apply outline-primary;
-}
-
-.lm_dropTargetIndicator .lm_inner {
-  @apply bg-primary;
-  opacity: 0.2;
-}
-
-.lm_header .lm_tab.lm_active.lm_focused {
-  background-color: #18181b;
-  color: #ffffff;
-}
-
-.lm_goldenlayout {
-  background: transparent !important;
-}
-
-.lm_content {
-  @apply rounded-md bg-zinc-900 border border-black/80;
-}
-
-.lm_tab {
-  display: flex;
-  background: transparent !important;
-  align-items: center;
-  padding-left: 0px !important;
-  @apply text-zinc-300 text-xl;
-}
-
-.lm_tab:hover, .lm_tab.lm_active {
-  opacity: 0.4;
-}
-
-.lm_header .lm_tab .lm_title {
-  padding-left: 4px;
-}
-</style>

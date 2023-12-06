@@ -22,3 +22,54 @@
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-zinc-700;
 }
+
+.lm_tab {
+  border-radius: 4px;
+}
+
+.lm_header .lm_tab {
+  box-shadow: unset !important;
+  background: #18181b;
+}
+
+.lm_dropTargetIndicator {
+  box-shadow: unset;
+  outline: 1px solid #9146FF;
+  border-radius: 4px;
+  @apply outline-primary;
+}
+
+.lm_dropTargetIndicator .lm_inner {
+  @apply bg-primary;
+  opacity: 0.2;
+}
+
+.lm_header .lm_tab.lm_active.lm_focused {
+  background-color: #18181b;
+  color: #ffffff;
+}
+
+.lm_goldenlayout {
+  background: transparent !important;
+}
+
+.lm_content {
+  @apply rounded-md bg-zinc-900 border border-black/80;
+}
+
+.lm_tab {
+  display: flex;
+  background: transparent !important;
+  align-items: center;
+  padding-left: 0px !important;
+  @apply text-zinc-300 text-xl;
+}
+
+.lm_tab:hover, .lm_tab.lm_active {
+  opacity: 0.4;
+}
+
+.lm_header .lm_tab .lm_title {
+  padding-left: 4px;
+}
+
