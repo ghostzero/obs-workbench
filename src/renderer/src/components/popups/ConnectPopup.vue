@@ -1,66 +1,85 @@
 <template>
-  <AppPopup>
-    <form
-      class="space-y-6"
-      action="#"
-      method="POST"
-      @submit.prevent="connect"
-    >
-      <AppInput
-        id="ip"
-        v-model="credentials.ip"
-        name="ip"
-        label="Server IP"
-      />
-      <AppInput
-        id="port"
-        v-model="credentials.port"
-        name="port"
-        label="Server Port"
-      />
-      <AppInput
-        id="password"
-        v-model="credentials.password"
-        name="password"
-        type="password"
-        label="Server Password"
-      />
+  <AppPopup
+    :closeable="false"
+  >
+    <div class="flex gap-6">
+      <form
+        class="space-y-6 flex-grow"
+        action="#"
+        method="POST"
+        @submit.prevent="connect"
+      >
+        <AppInput
+          id="ip"
+          v-model="credentials.ip"
+          name="ip"
+          label="Server IP"
+        />
+        <AppInput
+          id="port"
+          v-model="credentials.port"
+          name="port"
+          label="Server Port"
+        />
+        <AppInput
+          id="password"
+          v-model="credentials.password"
+          name="password"
+          type="password"
+          label="Server Password"
+        />
 
-      <div class="hidden flex items-center justify-between">
-        <div class="flex items-center">
-          <input
-            id="remember-me"
-            name="remember-me"
-            type="checkbox"
-            class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-600"
-          >
-          <label
-            for="remember-me"
-            class="ml-3 block text-sm leading-6 text-zinc-100"
-          >
-            Remember connection
-          </label>
+        <div class="hidden flex items-center justify-between">
+          <div class="flex items-center">
+            <input
+              id="remember-me"
+              name="remember-me"
+              type="checkbox"
+              class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-600"
+            >
+            <label
+              for="remember-me"
+              class="ml-3 block text-sm leading-6 text-zinc-100"
+            >
+              Remember connection
+            </label>
+          </div>
+
+          <div class="text-sm leading-6">
+            <a
+              href="#"
+              class="font-semibold text-primary-500 hover:text-primary-400"
+            >
+              How do I connect?
+            </a>
+          </div>
         </div>
 
-        <div class="text-sm leading-6">
-          <a
-            href="#"
-            class="font-semibold text-primary-500 hover:text-primary-400"
+        <AppButton
+          type="submit"
+          class="w-full"
+          :loading="connecting"
+          @click="connect"
+        >
+          Connect
+        </AppButton>
+      </form>
+      <div class="border-r border-r-zinc-700" />
+      <div>
+        <div class="grid grid-cols-2 gap-5">
+          <template
+            v-for="i in 4"
+            :key="i"
           >
-            How do I connect?
-          </a>
+            <AppServerQuickConnect name="OBS Server" />
+          </template>
         </div>
       </div>
+    </div>
 
-      <AppButton
-        type="submit"
-        class="w-full"
-        :loading="connecting"
-        @click="connect"
-      >
-        Connect
-      </AppButton>
-    </form>
+    <template #footer>
+      <AppProxyBanner class="mt-12" />
+    </template>
   </AppPopup>
 </template>
 
@@ -72,6 +91,8 @@ import { ref } from 'vue'
 import { useAppStore } from '../../store/app'
 import { usePopupStore } from '../../store/popup'
 import { useNotificationStore } from '../../store/notification'
+import AppServerQuickConnect from '../atoms/AppServerQuickConnect.vue'
+import AppProxyBanner from '../molecules/AppProxyBanner.vue'
 
 const store = useAppStore()
 const { close } = usePopupStore()
