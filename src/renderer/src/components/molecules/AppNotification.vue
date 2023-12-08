@@ -3,6 +3,7 @@
     <div
       class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-zinc-700 shadow-lg ring-1 ring-black ring-opacity-5"
     >
+
       <div class="p-4">
         <div class="flex items-start">
           <div class="flex-shrink-0">
@@ -51,6 +52,7 @@
 <script setup lang="ts">
 import { onMounted, PropType } from 'vue'
 import { Notification } from '../../store/notification'
+import AppTitlebarDropdown from '../atoms/AppTitlebarDropdown.vue'
 
 const props = defineProps({
   notification: {

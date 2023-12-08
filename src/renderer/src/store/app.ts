@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { EventSubscription, OBSEventTypes } from 'obs-websocket-js'
 import { useObs } from '../composables/useObs'
 
-const { obs: app } = useObs()
+const { obs: websocket } = useObs()
 
 export interface SceneItem {
   inputKind: string,
@@ -36,6 +36,16 @@ export interface State {
     inputName: string,
     unversionedInputKind: string
   }[],
+  profileList: {
+    currentProfileName: string
+    profiles: string[]
+    changing: boolean
+  },
+  sceneCollectionList: {
+    currentSceneCollectionName: string
+    sceneCollections: string[]
+    changing: boolean
+  }
   inputVolumeMeters: InputVolumeMeter[],
   inputVolumes: {
     [key: string]: {
@@ -103,6 +113,16 @@ export const useAppStore = defineStore('obs', {
       currentProgramSceneName: '',
       scenes: [],
       inputs: [],
+      profileList: {
+        changing: false,
+        currentProfileName: '',
+        profiles: []
+      },
+      sceneCollectionList: {
+        changing: false,
+        currentSceneCollectionName: '',
+        sceneCollections: []
+      },
       sceneItems: [],
       inputVolumeMeters: [],
       inputVolumes: {},
@@ -163,47 +183,32 @@ export const useAppStore = defineStore('obs', {
   actions: {
     async connect(url: string, password: string): Promise<void> {
       this.url = url
-      this.hello = await app.connect(url, password, {
+      this.hello = await websocket.connect(url, password, {
         eventSubscriptions: EventSubscription.All | EventSubscription.InputVolumeMeters,
         rpcVersion: 1
       }) as unknown as State['hello']
-      this.version = await app.call('GetVersion') as unknown as State['version']
+      this.version = await websocket.call('GetVersion') as unknown as State['version']
 
       console.log('hello', this.hello)
       console.log('version', this.version)
 
-      await app.call('SetStudioModeEnabled', {
+      await websocket.call('SetStudioModeEnabled', {
         studioModeEnabled: true
       })
 
-      const response = await app.call('GetSceneList')
-
-      if (!response.currentPreviewSceneName) {
-        throw new Error('Only Studio Mode is supported, yet.')
-      }
-
-      this.currentPreviewSceneName = response.currentPreviewSceneName
-      this.currentProgramSceneName = response.currentProgramSceneName
-      this.scenes = response.scenes as unknown as State['scenes']
-      this.inputs = (await app.call('GetInputList')).inputs as unknown as State['inputs']
-      this.stats = await app.call('GetStats')
-      this.videoSettings = await app.call('GetVideoSettings')
-      this.recordStatus = await app.call('GetRecordStatus')
-      this.streamStatus = await app.call('GetStreamStatus')
-      this.videoSettings = await app.call('GetVideoSettings')
-      await this.updateSceneItems()
-
-      console.log('inputs', this.inputs)
+      await this.fetchEntireState()
+      this.recordStatus = await websocket.call('GetRecordStatus')
+      this.streamStatus = await websocket.call('GetStreamStatus')
 
       this.inputs.forEach((input) => {
-        app.call('GetInputVolume', { inputName: input.inputName }).then((response) => {
+        websocket.call('GetInputVolume', { inputName: input.inputName }).then((response) => {
           this.inputVolumes[input.inputName] = {
             inputVolumeDb: response.inputVolumeDb,
             inputVolumeMul: response.inputVolumeMul,
             inputMuted: this.inputVolumes[input.inputName]?.inputMuted ?? false
           }
         })
-        app.call('GetInputMute', { inputName: input.inputName }).then((response) => {
+        websocket.call('GetInputMute', { inputName: input.inputName }).then((response) => {
           this.inputVolumes[input.inputName] = {
             inputVolumeDb: this.inputVolumes[input.inputName]?.inputVolumeDb ?? 0,
             inputVolumeMul: this.inputVolumes[input.inputName]?.inputVolumeMul ?? 0,
@@ -213,33 +218,33 @@ export const useAppStore = defineStore('obs', {
       })
 
       setInterval(async () => {
-        this.recordStatus = await app.call('GetRecordStatus')
-        this.streamStatus = await app.call('GetStreamStatus')
+        this.recordStatus = await websocket.call('GetRecordStatus')
+        this.streamStatus = await websocket.call('GetStreamStatus')
       }, 1000)
 
       setInterval(async () => {
-        this.stats = await app.call('GetStats')
+        this.stats = await websocket.call('GetStats')
       }, 3000)
 
-      app.on('CurrentProgramSceneChanged', (e: OBSEventTypes['CurrentProgramSceneChanged']) => {
+      websocket.on('CurrentProgramSceneChanged', (e: OBSEventTypes['CurrentProgramSceneChanged']) => {
         this.currentProgramSceneName = e.sceneName
       })
-      app.on('CurrentPreviewSceneChanged', (e: OBSEventTypes['CurrentPreviewSceneChanged']) => {
+      websocket.on('CurrentPreviewSceneChanged', (e: OBSEventTypes['CurrentPreviewSceneChanged']) => {
         this.currentPreviewSceneName = e.sceneName
-        app.call('GetSceneItemList', {
+        websocket.call('GetSceneItemList', {
           sceneName: e.sceneName
         }).then((response) => {
           this.sceneItems = response.sceneItems as unknown as SceneItem[]
         })
       })
-      app.on('SceneItemListReindexed', (e: OBSEventTypes['SceneItemListReindexed']) => {
+      websocket.on('SceneItemListReindexed', (e: OBSEventTypes['SceneItemListReindexed']) => {
         if (this.currentPreviewSceneName === e.sceneName) {
           console.log(e.sceneItems) // {sceneItemId: 13, sceneItemIndex: 1}[]
           console.log(this.sceneItems) // {sceneItemId: 13, sceneItemIndex: 1}[]
 
         }
       })
-      app.on('SceneItemEnableStateChanged', (e: OBSEventTypes['SceneItemEnableStateChanged']) => {
+      websocket.on('SceneItemEnableStateChanged', (e: OBSEventTypes['SceneItemEnableStateChanged']) => {
         if (this.currentPreviewSceneName === e.sceneName) {
           // update sceneItem in sceneItems
           const sceneItem = this.sceneItems
@@ -249,7 +254,7 @@ export const useAppStore = defineStore('obs', {
           }
         }
       })
-      app.on('SceneItemLockStateChanged', (e: OBSEventTypes['SceneItemLockStateChanged']) => {
+      websocket.on('SceneItemLockStateChanged', (e: OBSEventTypes['SceneItemLockStateChanged']) => {
         if (this.currentPreviewSceneName === e.sceneName) {
           // update sceneItem in sceneItems
           const sceneItem = this.sceneItems
@@ -261,16 +266,16 @@ export const useAppStore = defineStore('obs', {
       })
       // Audio API
 
-      app.on('InputVolumeMeters', (e: OBSEventTypes['InputVolumeMeters']) => {
+      websocket.on('InputVolumeMeters', (e: OBSEventTypes['InputVolumeMeters']) => {
         // update inputVolumeMeters
         this.inputVolumeMeters = e.inputs as unknown as InputVolumeMeter[]
       })
 
-      app.on('StreamStateChanged', (e: OBSEventTypes['StreamStateChanged']) => {
+      websocket.on('StreamStateChanged', (e: OBSEventTypes['StreamStateChanged']) => {
         this.streamStatus.outputActive = e.outputActive
       })
 
-      app.on('InputVolumeChanged', (e: OBSEventTypes['InputVolumeChanged']) => {
+      websocket.on('InputVolumeChanged', (e: OBSEventTypes['InputVolumeChanged']) => {
         this.inputVolumes[e.inputName] = {
           inputVolumeDb: e.inputVolumeDb,
           inputVolumeMul: e.inputVolumeMul,
@@ -278,7 +283,7 @@ export const useAppStore = defineStore('obs', {
         }
       })
 
-      app.on('InputMuteStateChanged', (e: OBSEventTypes['InputMuteStateChanged']) => {
+      websocket.on('InputMuteStateChanged', (e: OBSEventTypes['InputMuteStateChanged']) => {
         this.inputVolumes[e.inputName] = {
           inputVolumeDb: this.inputVolumes[e.inputName]?.inputVolumeDb ?? 0,
           inputVolumeMul: this.inputVolumes[e.inputName]?.inputVolumeMul ?? 0,
@@ -286,28 +291,81 @@ export const useAppStore = defineStore('obs', {
         }
       })
 
-      app.on('RecordStateChanged', (e: OBSEventTypes['RecordStateChanged']) => {
+      // Recording API
+
+      websocket.on('RecordStateChanged', (e: OBSEventTypes['RecordStateChanged']) => {
         this.recordStatus.outputActive = e.outputActive
       })
 
-      app.on('SceneListChanged', (e: OBSEventTypes['SceneListChanged']) => {
+      websocket.on('SceneListChanged', (e: OBSEventTypes['SceneListChanged']) => {
         this.scenes = e.scenes as unknown as State['scenes']
       })
 
+      // Scene & Profile API
+
+      websocket.on('SceneCollectionListChanged', (e: OBSEventTypes['SceneCollectionListChanged']) => {
+        this.sceneCollectionList.sceneCollections = e.sceneCollections
+      })
+
+      websocket.on('CurrentSceneCollectionChanging', () => {
+        this.sceneCollectionList.changing = true
+      })
+
+      websocket.on('CurrentSceneCollectionChanged', async () => {
+        await this.fetchEntireState()
+      })
+
+      websocket.on('ProfileListChanged', (e: OBSEventTypes['ProfileListChanged']) => {
+        this.profileList.profiles = e.profiles
+      })
+
+      websocket.on('CurrentProfileChanging', () => {
+        this.profileList.changing = false
+      })
+
+      websocket.on('CurrentProfileChanged', async () => {
+        await this.fetchEntireState()
+      })
 
       const list = ['SceneItemCreated', 'SceneItemRemoved', 'SceneItemListReindexed']
-      list.forEach((event: any) => app.on(event, () => this.updateSceneItems()))
+      list.forEach((event: any) => websocket.on(event, () => this.updateSceneItems()))
 
       this.connected = true
     },
+    async fetchEntireState() {
+      const response = await websocket.call('GetSceneList')
+
+      if (!response.currentPreviewSceneName) {
+        throw new Error('Only Studio Mode is supported, yet.')
+      }
+
+      this.currentPreviewSceneName = response.currentPreviewSceneName
+      this.currentProgramSceneName = response.currentProgramSceneName
+      this.scenes = response.scenes as unknown as State['scenes']
+      this.inputs = (await websocket.call('GetInputList')).inputs as unknown as State['inputs']
+      this.stats = await websocket.call('GetStats')
+      this.videoSettings = await websocket.call('GetVideoSettings')
+      this.videoSettings = await websocket.call('GetVideoSettings')
+      this.profileList = {
+        ...await websocket.call('GetProfileList'),
+        changing: false
+      }
+      this.sceneCollectionList = {
+        ...await websocket.call('GetSceneCollectionList'),
+        changing: false
+      }
+      await this.updateSceneItems()
+
+      console.log('inputs', this.inputs)
+    },
     async updateSceneItems() {
-      this.sceneItems = (await app.call('GetSceneItemList', {
+      this.sceneItems = (await websocket.call('GetSceneItemList', {
         sceneName: this.currentPreviewSceneName
       })).sceneItems as unknown as State['sceneItems']
     },
     setInputVolume(inputName: string, inputVolumeDb: number) {
       // noinspection JSIgnoredPromiseFromCall
-      app.call('SetInputVolume', {
+      websocket.call('SetInputVolume', {
         inputName,
         inputVolumeDb
       })
