@@ -1,34 +1,38 @@
-# obs-workbench
+# Remote Control for OBS (ALPHA)
 
-An Electron application with Vue and TypeScript
+With OBS Remote Control you can control your OBS Studio from other devices in the same network. This is a web
+application that runs in your browser and communicates with OBS Studio via WebSockets.
 
-## Recommended IDE Setup
+![Screenshot](docs/screenshots/chrome_tejCpT9xIB.gif)
 
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin)
+Demo is available at [https://open.obs-workbench.com/](https://studio.ghostzero.dev/) and currently **only
+supports Studio Mode**.
 
-## Project Setup
+> This project is not affiliated with OBS or any of their partners. All copyrights reserved to their respective owners.
+> I do not recommend using this in production environments as it is still in early development.
 
-### Install
+## Goals
 
-```bash
-$ yarn
-```
+My goal is to create a web application that can be used to control OBS Studio from any device in the world to serve the
+needs for IRL streamers. I want to make it as easy as possible to use and setup. I want to make it as secure as possible
+to use. I want to make it as reliable as possible to use.
 
-### Development
+## Features
 
-```bash
-$ yarn dev
-```
+- Fancy UI
+- Display preview and program scenes
+- Switch scenes between preview and program
+- Toggle visibility and lock of sources
 
-### Build
+## Work in Progress
 
-```bash
-# For windows
-$ yarn build:win
+I still have some few features to implement before I can call this a beta version. I will update this list as I go.
 
-# For macOS
-$ yarn build:mac
-
-# For Linux
-$ yarn build:linux
-```
+- [x] Support for Audio Mixer controls
+- [ ] Support for Simple Mode
+- [ ] Support for Multiview
+- [ ] Switching between Scene Collections
+- [ ] Switching between Profiles
+- [ ] Accounts System for additional features
+- [ ] SRT Ingest and Source for IRL streaming
+- [ ] Build-in Ingress Server for localhost

@@ -2,18 +2,20 @@
   <button
     :type="props.type"
     :class="['flex relative items-center justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600', {
-    'bg-primary-500 hover:bg-primary-400': props.variant === 'solid',
-    'bg-zinc-800 hover:bg-zinc-700': props.variant === 'ghost',
-    'bg-zinc-800 hover:bg-zinc-700 ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary-500': props.variant === 'outline',
-    'cursor-not-allowed': props.loading,
-  }]"
+      'bg-primary-500 hover:bg-primary-400': props.variant === 'solid',
+      'bg-zinc-800 hover:bg-zinc-700': props.variant === 'ghost',
+      'bg-zinc-800 hover:bg-zinc-600': props.variant === 'ghost-titlebar',
+      'bg-primary-900 hover:bg-primary-700': props.variant === 'solid-titlebar',
+      'bg-zinc-800 hover:bg-zinc-700 ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary-500': props.variant === 'outline',
+      'cursor-not-allowed': props.loading,
+    }]"
     :disabled="props.loading"
   >
     <span
       :class="{
-       'opacity-30': props.loading,
-       'opacity-100': !props.loading,
-     }"
+        'opacity-30': props.loading,
+        'opacity-100': !props.loading,
+      }"
     >
       <slot />
     </span>

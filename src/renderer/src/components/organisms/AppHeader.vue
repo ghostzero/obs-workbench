@@ -64,12 +64,10 @@
         </template>
       </AppInfoBadge>
     </div>
-    <Controls />
   </div>
 </template>
 
 <script setup lang="ts">
-import Controls from '../Controls.vue'
 import AppInfoBadge from '../atoms/AppInfoBadge.vue'
 import { useAppStore } from '../../store/app'
 

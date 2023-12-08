@@ -1,14 +1,14 @@
 <template>
   <div
     :class="['relative transform overflow-hidden sm:my-8 sm:w-full', {
-        'sm:max-w-xl': props.maxWidth === 'xl',
-        'sm:max-w-2xl': props.maxWidth === '2xl',
-        'sm:max-w-3xl': props.maxWidth === '3xl',
-        'sm:max-w-4xl': props.maxWidth === '4xl',
-        'sm:max-w-5xl': props.maxWidth === '5xl',
-        'sm:max-w-6xl': props.maxWidth === '6xl',
-        'sm:max-w-7xl': props.maxWidth === '7xl',
-      }]"
+      'sm:max-w-xl': props.maxWidth === 'xl',
+      'sm:max-w-2xl': props.maxWidth === '2xl',
+      'sm:max-w-3xl': props.maxWidth === '3xl',
+      'sm:max-w-4xl': props.maxWidth === '4xl',
+      'sm:max-w-5xl': props.maxWidth === '5xl',
+      'sm:max-w-6xl': props.maxWidth === '6xl',
+      'sm:max-w-7xl': props.maxWidth === '7xl',
+    }]"
   >
     <div
       class="text-white bg-zinc-800 px-4 pb-4 pt-5 rounded-lg text-left shadow-xl transition-all sm:p-6"
@@ -57,7 +57,7 @@ const props = defineProps({
   },
   maxWidth: {
     type: String,
-    default: '4xl'
+    default: 'xl'
   }
 })
 </script>

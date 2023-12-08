@@ -1,7 +1,7 @@
 <template>
   <div
     ref="view"
-    class="grid h-full px-4"
+    class="grid h-full px-2"
   >
     <div class="flex items-center gap-3">
       <div class="flex-1 h-full w-[1/2]">

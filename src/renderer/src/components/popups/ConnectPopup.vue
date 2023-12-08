@@ -1,6 +1,7 @@
 <template>
   <AppPopup
     :closeable="false"
+    max-width="4xl"
   >
     <div class="flex gap-6">
       <form
@@ -78,7 +79,12 @@
     </div>
 
     <template #footer>
-      <AppProxyBanner class="mt-12" />
+      <AppProxyBanner class="mt-12 mb-6" />
+
+      <div class="text-white/50 text-xs text-center font-light">
+        This project is not affiliated with OBS or any of their partners. All copyrights reserved to their respective
+        owners. I do not recommend using this in production environments as it is still in early development.
+      </div>
     </template>
   </AppPopup>
 </template>
@@ -99,7 +105,7 @@ const { close } = usePopupStore()
 const connecting = ref(false)
 
 const credentials = ref({
-  ip: '127.0.0.1',
+  ip: '10.10.0.214',
   port: '4455',
   password: 'o0vDZDSu8O975flK'
 })

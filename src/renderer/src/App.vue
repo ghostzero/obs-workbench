@@ -6,7 +6,9 @@
     <AppPopups />
     <AppNotifications />
     <template v-if="store.connected">
-      <main class="flex flex-col gap-4 px-8 py-4 h-screen">
+      <AppTitlebar />
+
+      <main class="flex flex-col gap-4 px-8 py-4 h-[calc(100vh-52px)]">
         <AppHeader />
 
         <div class="flex-auto">
@@ -18,28 +20,23 @@
         </div>
 
         <footer>
-          <div class="mx-auto">
+          <div class="flex justify-between">
             <div
               class="text-center text-sm text-gray-500 sm:text-left"
             >
               <span class="block sm:inline">
                 &copy; 2023 René Preuß. All rights reserved. Running OBS Websocket
-                <button
-                  type="button"
-                  @click="onClickAddGLComponent1"
-                >create</button>
-                <button
-                  type="button"
-                  @click="onClickSaveLayout"
-                > save</button>
-                <button
-                  type="button"
-                  @click="onClickResetLayout"
-                > reset</button>
                 {{ store.version.obsWebSocketVersion }} on OBS Studio
                 {{ store.version.obsVersion }} on
                 {{ store.version.platformDescription }}.
               </span>
+            </div>
+            <div class="flex gap-2 text-center">
+              <div class="flex gap-1.5 text-center text-sm text-gray-500 sm:text-left">
+                <div><b>Profile:</b> Test</div>
+                <div>|</div>
+                <div><b>Scene Collection:</b> Scene</div>
+              </div>
             </div>
           </div>
         </footer>
@@ -64,6 +61,8 @@ import SceneList from './components/docks/SceneList.vue'
 import StudioView from './components/docks/StudioView.vue'
 import AudioMixer from './components/docks/AudioMixer.vue'
 import { useNotificationStore } from './store/notification'
+import { defaultLayoutConfig } from './predefined-layouts'
+import AppTitlebar from './components/organisms/AppTitlebar.vue'
 
 const store = useAppStore()
 const { success } = useNotificationStore()
@@ -73,7 +72,7 @@ const componentTypes = {
   Sources: markRaw(SceneItemList),
   Scenes: markRaw(SceneList),
   Main: markRaw(StudioView),
-  AudioMixer: markRaw(AudioMixer),
+  AudioMixer: markRaw(AudioMixer)
 }
 
 const onClickAddGLComponent1 = async () => {
@@ -83,12 +82,14 @@ const onClickAddGLComponent1 = async () => {
 
 onMounted(async () => {
   await onClickLoadLayout() //
+  // await onClickSaveLayout()
 })
 
 const onClickSaveLayout = async () => {
   const layout = await useWaitForRef<typeof Glayout>(GLayoutRoot)
   const config = layout.getLayoutConfig()
   localStorage.setItem('gl_config', JSON.stringify(config))
+  console.log(JSON.stringify(config))
   success({
     type: 'success',
     title: 'Layout saved',
@@ -113,10 +114,7 @@ const onClickLoadLayout = async () => {
 
   const str = localStorage.getItem('gl_config')
   if (!str) {
-    layout.addGLComponent('Sources', 'Sources')
-    layout.addGLComponent('Scenes', 'Scenes')
-    layout.addGLComponent('Main', '')
-    layout.addGLComponent('AudioMixer', 'Audio Mixer')
+    layout.loadGLLayout(defaultLayoutConfig)
     return
   }
 
