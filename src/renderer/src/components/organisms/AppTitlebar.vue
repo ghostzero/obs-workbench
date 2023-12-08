@@ -44,17 +44,20 @@
         <div class="flex">
           <AppButton
             variant="ghost-titlebar"
+            @click="minimizeWindow()"
           >
             <i class="fal fa-minus fa-fw" />
           </AppButton>
           <AppButton
             variant="ghost-titlebar"
+            @click="maximizeWindow()"
           >
             <i class="fal fa-square fa-fw" />
           </AppButton>
           <AppButton
+            :destructive="true"
             variant="ghost-titlebar"
-            class="hover:bg-primary-900"
+            @click="closeWindow()"
           >
             <i class="fal fa-times fa-fw" />
           </AppButton>
@@ -96,7 +99,7 @@ const menuItems = ref([
     id: 0,
     label: 'Production',
     icon: { name: 'server' }
-  },
+  }
 ])
 
 const setActiveProfile = (name: string) => {
@@ -109,5 +112,21 @@ const setActiveSceneCollection = (name: string) => {
   obs.call('SetCurrentSceneCollection', {
     'sceneCollectionName': name
   })
+}
+
+const minimizeWindow = () => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  window.api.minimizeWindow()
+}
+const maximizeWindow = () => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  window.api.maximizeWindow()
+}
+const closeWindow = () => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  window.api.closeWindow()
 }
 </script>
