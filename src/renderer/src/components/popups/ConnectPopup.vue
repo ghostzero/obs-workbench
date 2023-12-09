@@ -1,6 +1,6 @@
 <template>
   <AppPopup
-    :closeable="false"
+    close-position="top-right-outside"
     max-width="4xl"
   >
     <div class="flex gap-6">
