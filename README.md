@@ -1,6 +1,6 @@
 # OBS Workbench (ALPHA)
 
-With OBS Remote Control you can control your OBS Studio from other devices in the same network. This is a web
+With OBS Workbench you can control your OBS Studio from other devices in the same network. This is a web
 application that runs in your browser and communicates with OBS Studio via WebSockets.
 
 ![Screenshot](docs/screenshots/electron_24GIwtPnu8.gif)
