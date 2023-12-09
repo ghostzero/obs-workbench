@@ -51,7 +51,7 @@
               }]"
               role="menuitem"
               tabindex="-1"
-              @click.prevent="() => select(item.id)"
+              @click.prevent="() => select(item)"
             >
               <div v-if="item.letter">
                 <div
@@ -63,7 +63,7 @@
               <div class="flex items-center">
                 <i
                   v-if="props.icon"
-                  :class="['fal fa-fw mr-1', `fa-${item.icon.name}`]"
+                  :class="['fal fa-fw mr-1', `fa-${item.icon?.name}`]"
                 />
                 <div>
                   <div>{{ item.label }}</div>
@@ -86,6 +86,15 @@ const emit = defineEmits(['select'])
 
 const ignoreElRef = ref()
 
+export interface MenuItem {
+  id: string | number,
+  label: string,
+  icon?: { name: string },
+  subtitle?: string
+  letter?: { text: string, color: string }
+  data?: unknown
+}
+
 const props = defineProps({
   letter: {
     type: Object as PropType<{ text: string, color: string }> | undefined,
@@ -98,13 +107,7 @@ const props = defineProps({
     required: false
   },
   menuItems: {
-    type: Array as PropType<{
-      id: string,
-      label: string,
-      icon?: { name: string },
-      subtitle?: string
-      letter?: { text: string, color: string }
-    }[]>,
+    type: Array as PropType<MenuItem[]>,
     default: () => []
   },
   selected: {
@@ -116,8 +119,8 @@ const props = defineProps({
 
 const open = ref(false)
 
-const select = (id: string) => {
-  emit('select', id)
+const select = (item: MenuItem) => {
+  emit('select', item)
   open.value = false
 }
 </script>

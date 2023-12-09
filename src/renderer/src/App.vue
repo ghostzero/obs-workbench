@@ -5,9 +5,9 @@
   >
     <AppPopups />
     <AppNotifications />
-    <template v-if="store.connected">
-      <AppTitlebar />
+    <AppTitlebar />
 
+    <template v-if="store.connected">
       <main class="flex flex-col gap-4 px-8 py-4 h-[calc(100vh-52px)]">
         <AppHeader />
 

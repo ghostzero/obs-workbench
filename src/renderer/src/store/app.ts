@@ -182,6 +182,10 @@ export const useAppStore = defineStore('obs', {
   },
   actions: {
     async connect(url: string, password: string): Promise<void> {
+      if (this.connected) {
+        await websocket.disconnect()
+      }
+
       this.url = url
       this.hello = await websocket.connect(url, password, {
         eventSubscriptions: EventSubscription.All | EventSubscription.InputVolumeMeters,
