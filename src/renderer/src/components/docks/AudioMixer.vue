@@ -10,18 +10,12 @@
       <VolumeMeter :volume-meter="volumeMeter" />
     </template>
   </div>
-  <div
+  <AppEmptyState
     v-else
-    class="flex h-full flex-col items-center justify-center gap-2 text-center"
-  >
-    <i class="fal fa-fw fa-sliders-up text-5xl text-zinc-500" />
-    <h3 class="mt-2 text-sm font-semibold text-zinc-200">
-      No Audio Sources
-    </h3>
-    <p class="mt-1 text-sm text-zinc-500">
-      Your <b>Program</b> doesn't have any audio sources.
-    </p>
-  </div>
+    :icon="{ name: 'sliders-up' }"
+    title="No Audio Sources"
+    description="Your **Program** doesn't have any audio sources."
+  />
 </template>
 
 <script setup lang="ts">
@@ -30,6 +24,7 @@ import { useObs } from '../../composables/useObs'
 import { computed } from 'vue'
 import { useSceneStore } from '../../store/scene'
 import VolumeMeter from '../molecules/VolumeMeter.vue'
+import AppEmptyState from '../atoms/AppEmptyState.vue'
 
 const store = useAppStore()
 const scene = useSceneStore()

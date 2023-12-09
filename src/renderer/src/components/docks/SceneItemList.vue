@@ -1,5 +1,6 @@
 <template>
   <nav
+    v-if="items.length > 0"
     class="flex flex-1 flex-col"
     aria-label="Sidebar"
   >
@@ -14,15 +15,16 @@
         <li>
           <a
             href="#"
+            @click.prevent="(e: MouseEvent) => doubleClick(e, item)"
             :class="['group flex justify-between gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold', {
-              'bg-primary-500 text-white': store.currentPreviewSceneName === item.sourceName,
-              'text-white hover:bg-zinc-800': store.currentPreviewSceneName !== item.sourceName,
+              'bg-primary-500 text-white': selected === item,
+              'text-white hover:bg-zinc-700': selected !== item,
             }]"
           >
             <div
               :class="['truncate', {'text-white/50': !item.sceneItemEnabled}]"
             >
-              <SceneItemIcon :kind="item.inputKind" />
+              <SceneItemIcon :item="item" />
               {{ item.sourceName }}
             </div>
             <div class="flex gap-4 items-center">
@@ -62,18 +64,27 @@
       </template>
     </ul>
   </nav>
+  <AppEmptyState
+    v-else
+    :icon="{ name: 'list' }"
+    title="No Sources"
+    description="Your **Scene** doesn't have any sources."
+  />
 </template>
 
 <script setup lang="ts">
-import { useAppStore } from '../../store/app'
+import { SceneItem, useAppStore } from '../../store/app'
 import { useObs } from '../../composables/useObs'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useSceneStore } from '../../store/scene'
 import SceneItemIcon from '../atoms/SceneItemIcon.vue'
+import AppEmptyState from '../atoms/AppEmptyState.vue'
 
 const store = useAppStore()
 const { obs } = useObs()
 const { removeSceneItem } = useSceneStore()
+
+const selected = ref<SceneItem | null>(null)
 
 const items = computed(() => {
   return store.sceneItems.slice() // sort by sceneItemIndex (z-index)
@@ -95,5 +106,16 @@ const toggleLocked = async (item: any) => {
     sceneItemId: item.sceneItemId,
     sceneItemLocked: item.sceneItemLocked
   })
+}
+
+const doubleClick = async (e: MouseEvent, item: SceneItem) => {
+  if (e.detail === 1) {
+    selected.value = item
+  }
+  if (e.detail === 2) {
+    await obs.call('SetCurrentPreviewScene', {
+      sceneName: item.sourceName
+    })
+  }
 }
 </script>

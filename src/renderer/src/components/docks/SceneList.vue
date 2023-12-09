@@ -1,5 +1,6 @@
 <template>
   <nav
+    v-if="items.length > 0"
     class="flex w-full flex-col"
     aria-label="Sidebar"
   >
@@ -18,7 +19,7 @@
             href="#"
             :class="['group flex justify-between gap-x-3 rounded-md p-2 px-3 text-sm leading-6 font-semibold', {
               'bg-primary-500 text-white': store.currentPreviewSceneName === item.sceneName,
-              'text-white hover:bg-zinc-800': store.currentPreviewSceneName !== item.sceneName,
+              'text-white hover:bg-zinc-700': store.currentPreviewSceneName !== item.sceneName,
             }]"
             @click.prevent="updatePreviewScene(item.sceneName)"
           >
@@ -46,6 +47,12 @@
       </template>
     </ul>
   </nav>
+  <AppEmptyState
+    v-else
+    :icon="{ name: 'list' }"
+    title="No Scenes"
+    description="Your **Scenes** list is empty."
+  />
 </template>
 
 <script setup lang="ts">
@@ -53,6 +60,7 @@ import { useAppStore } from '../../store/app'
 import { useObs } from '../../composables/useObs'
 import { computed } from 'vue'
 import { useSceneStore } from '../../store/scene'
+import AppEmptyState from '../atoms/AppEmptyState.vue'
 
 const store = useAppStore()
 const scene = useSceneStore()

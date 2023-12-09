@@ -13,9 +13,9 @@
       </div>
       <div
         v-if="props.letter"
-        class="bg-gradient-to-r from-primary-500 to-rose-500 w-6 h-6 rounded flex justify-center items-center"
+        :class="['w-6 h-6 rounded flex justify-center items-center', props.letter.color]"
       >
-        {{ props.letter }}
+        {{ props.letter.text }}
       </div>
       <div>
         <slot />
@@ -25,7 +25,7 @@
 
     <div
       v-if="open"
-      class="absolute left-0 z-50 mt-2 w-56 origin-top-right rounded-md bg-zinc-700 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+      class="absolute left-0 z-50 mt-2 w-[280px] origin-top-right rounded-md bg-zinc-700 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
       role="menu"
       aria-orientation="vertical"
       aria-labelledby="menu-button"
@@ -46,15 +46,30 @@
             <a
               id="menu-item-0"
               href="#"
-              :class="['text-zinc-100 block px-4 py-2 text-sm hover:bg-zinc-600', {
+              :class="['text-zinc-100 flex gap-3 items-center px-4 py-2 text-sm hover:bg-zinc-600', {
                 'bg-zinc-600': props.selected === item.id
               }]"
               role="menuitem"
               tabindex="-1"
               @click.prevent="() => select(item.id)"
             >
-              <i :class="['fal fa-fw mr-1', `fa-${item.icon.name}`]" />
-              {{ item.label }}
+              <div v-if="item.letter">
+                <div
+                  :class="['w-6 h-6 rounded flex justify-center items-center', item.letter.color]"
+                >
+                  {{ item.letter.text }}
+                </div>
+              </div>
+              <div class="flex items-center">
+                <i
+                  v-if="props.icon"
+                  :class="['fal fa-fw mr-1', `fa-${item.icon.name}`]"
+                />
+                <div>
+                  <div>{{ item.label }}</div>
+                  <div class="text-white/50 text-xs">{{ item.subtitle }}</div>
+                </div>
+              </div>
             </a>
           </template>
         </div>
@@ -73,7 +88,7 @@ const ignoreElRef = ref()
 
 const props = defineProps({
   letter: {
-    type: String,
+    type: Object as PropType<{ text: string, color: string }> | undefined,
     default: undefined,
     required: false
   },
@@ -83,7 +98,13 @@ const props = defineProps({
     required: false
   },
   menuItems: {
-    type: Array as PropType<{ id: string, label: string, icon: { name: string } }[]>,
+    type: Array as PropType<{
+      id: string,
+      label: string,
+      icon?: { name: string },
+      subtitle?: string
+      letter?: { text: string, color: string }
+    }[]>,
     default: () => []
   },
   selected: {

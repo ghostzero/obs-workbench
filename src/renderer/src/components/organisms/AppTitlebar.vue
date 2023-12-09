@@ -13,7 +13,7 @@
         </button>
 
         <AppTitlebarDropdown
-          letter="P"
+          :letter="{ text: 'P', color: 'bg-gradient-to-r from-primary-500 to-rose-700' }"
           :menu-items="menuItems"
         >
           Production
@@ -98,7 +98,20 @@ const menuItems = ref([
   {
     id: 0,
     label: 'Production',
-    icon: { name: 'server' }
+    subtitle: 'ws://localhost:4455',
+    letter: { text: 'P', color: 'bg-gradient-to-r from-primary-500 to-rose-700' }
+  },
+  {
+    id: 1,
+    label: 'Testing',
+    subtitle: 'ws://10.10.0.214:4455',
+    letter: { text: 'T', color: 'bg-gradient-to-r from-indigo-500 to-indigo-700' }
+  },
+  {
+    id: 2,
+    label: 'Remote',
+    subtitle: 'ws://pxy1.example.com:4455',
+    letter: { text: 'R', color: 'bg-gradient-to-r from-amber-500 to-amber-700' }
   }
 ])
 

@@ -32,11 +32,13 @@
               </span>
             </div>
             <div class="flex gap-2 text-center">
+              <!--
               <div class="flex gap-1.5 text-center text-sm text-gray-500 sm:text-left">
-                <div><b>Profile:</b> Test</div>
+                <div><b>Profile:</b> {{ store.profileList.currentProfileName}}</div>
                 <div>|</div>
-                <div><b>Scene Collection:</b> Scene</div>
+                <div><b>Scene Collection:</b> {{ store.sceneCollectionList.currentSceneCollectionName}}</div>
               </div>
+              -->
             </div>
           </div>
         </footer>

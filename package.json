@@ -25,6 +25,7 @@
     "@vueuse/core": "^10.7.0",
     "electron-updater": "^6.1.1",
     "golden-layout": "^2.6.0",
+    "markdown-it": "^14.0.0",
     "obs-websocket-js": "^5.0.3",
     "pinia": "^2.1.7"
   },

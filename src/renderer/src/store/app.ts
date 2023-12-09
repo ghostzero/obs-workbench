@@ -14,7 +14,7 @@ export interface SceneItem {
   sceneItemLocked: boolean
   sceneItemTransform: any,
   sourceName: string,
-  sourceType: 'OBS_SOURCE_TYPE_INPUT',
+  sourceType: 'OBS_SOURCE_TYPE_INPUT' | 'OBS_SOURCE_TYPE_SCENE',
 }
 
 export interface InputVolumeMeter {
