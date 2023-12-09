@@ -8,9 +8,9 @@ import 'golden-layout/dist/css/themes/goldenlayout-dark-theme.css'
 import './style.css'
 import { useUserStore } from './store/user'
 
-axios.defaults.baseURL = 'http://localhost:8000';
-axios.defaults.withCredentials = true;
-axios.defaults.withXSRFToken = true;
+axios.defaults.baseURL = import.meta.env.RENDERER_VITE_API_URL as string
+axios.defaults.withCredentials = true
+axios.defaults.withXSRFToken = true
 
 const pinia = createPinia()
 const app = createApp(App)
@@ -22,4 +22,4 @@ const user = useUserStore()
 axios.get('/sanctum/csrf-cookie').then(async (response) => {
   await user.fetch()
   app.mount('#app')
-});
+})

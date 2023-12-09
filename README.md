@@ -26,10 +26,13 @@ to use. I want to make it as reliable as possible to use.
 I still have some few features to implement before I can call this a beta version. I will update this list as I go.
 
 - [x] Support for Audio Mixer controls
-- [ ] Support for Simple Mode
-- [ ] Support for Multiview
 - [x] Switching between Scene Collections
 - [x] Switching between Profiles
 - [x] Accounts System for additional features
 - [ ] SRT Ingest and Source for IRL streaming
 - [ ] Build-in Ingress Server for localhost
+
+### Planned Features
+
+- [ ] Support for Simple Mode
+- [ ] Support for Multiview

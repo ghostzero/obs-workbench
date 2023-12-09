@@ -170,7 +170,7 @@ const connecting = ref(false)
 const credentials: Ref<Connection> = ref({
   ip: 'localhost',
   port: '4455',
-  password: 'o0vDZDSu8O975flK'
+  password: ''
 })
 
 const { error } = useNotificationStore()
@@ -201,6 +201,7 @@ const quickConnect = (connection: Connection) => {
 }
 
 const openServerManager = () => {
-  window.open('http://localhost:8000/connections', '_blank')
+  const baseUrl = import.meta.env.RENDERER_VITE_API_URL as string
+  window.open(`${baseUrl}/connections`, '_blank')
 }
 </script>

@@ -1,10 +1,11 @@
 {
   "name": "workbench",
+  "productName": "OBS Workbench",
   "version": "1.0.0",
-  "description": "An Electron application with Vue and TypeScript",
+  "description": "An Electron & Vue.js based remote control for OBS",
   "main": "./out/main/index.js",
-  "author": "example.com",
-  "homepage": "https://www.electronjs.org",
+  "author": "René Preuß",
+  "homepage": "https://www.obs-workbench.com",
   "scripts": {
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts,.vue --fix",
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",

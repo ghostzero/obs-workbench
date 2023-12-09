@@ -74,6 +74,7 @@ const login = () => {
 
 const createAccount = () => {
   // open popup window
-  window.open('http://localhost:8000/register', '_blank', 'width=500,height=500')
+  const baseUrl = import.meta.env.RENDERER_VITE_API_URL as string
+  window.open(`${baseUrl}/register`, '_blank', 'width=500,height=500')
 }
 </script>
