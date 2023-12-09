@@ -10,7 +10,8 @@
   <i v-else-if="props.item.inputKind === 'browser_source'" class="fas fa-fw fa-globe-asia"></i>
   <i v-else-if="props.item.inputKind === 'image_source'" class="fas fa-fw fa-image"></i>
   <i v-else-if="props.item.inputKind === 'text_ft2_source_v2'" class="fas fa-fw fa-text"></i>
-  <i v-else class="fas fa-fw fa-question" :title="props.item.sourceType"></i>
+  <i v-else-if="props.item.inputKind === 'monitor_capture'" class="fas fa-fw fa-desktop"></i>
+  <i v-else class="fas fa-fw fa-question" :title="props.item.inputKind"></i>
 </template>
 
 <script setup lang="ts">

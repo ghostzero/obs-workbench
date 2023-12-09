@@ -1,7 +1,7 @@
 <template>
   <div
-    class="bg-zinc-800 text-white/90 bg-gradient-to-r from-zinc-800 via-primary-500/25 to-zinc-800 via-5% to-25% w-full z-[60]"
-    style="-webkit-app-region: drag"
+    :class="[`text-white/90 w-full z-[60]`]"
+    :style="calculateViaGradient"
   >
     <div class="flex items-center justify-between px-8 py-2 gap-5">
       <div class="flex items-center gap-5">
@@ -78,10 +78,21 @@ import { Connection, useAppStore } from '../../store/app'
 import { useObs } from '../../composables/useObs'
 import { useNotificationStore } from '../../store/notification'
 import AppControls from '../atoms/AppControls.vue'
+import { usePopupStore } from '../../store/popup'
+import { colorPalette } from '../../color-palette'
 
 const store = useAppStore()
 const { error } = useNotificationStore()
+const { openPopup } = usePopupStore()
 const { obs } = useObs()
+
+const calculateViaGradient = computed(() => {
+  const { r, g, b } = colorPalette[activeConnection.value.letter?.color ?? 'red']
+  return {
+    'background': `linear-gradient(90deg, #18181B 0px, rgba(${r}, ${g}, ${b}, .4) 95px, #18181B 300px)`,
+    '-webkit-app-region': 'drag'
+  }
+})
 
 const profileMenuItems = computed(() => {
   return store.profileList.profiles.map((profile) => ({
@@ -101,6 +112,7 @@ const sceneCollectionMenuItems = computed(() => {
 
 const activeConnection = computed(() => {
   return menuItems.value.find((item) => {
+    if (!item.data) return false
     const connection = item.data as Connection
     return connection.ip === store.connection.ip &&
       connection.port === store.connection.port &&
@@ -111,9 +123,14 @@ const activeConnection = computed(() => {
 const menuItems: Ref<MenuItem[]> = ref([
   {
     id: 0,
+    label: 'Connect to a new server',
+    icon: { name: 'plus' }
+  },
+  {
+    id: 1,
     label: 'Production',
     subtitle: 'ws://localhost:4455',
-    letter: { text: 'P', color: 'bg-gradient-to-r from-primary-500 to-rose-700' },
+    letter: { text: 'P', color: 'rose' },
     data: {
       ip: 'localhost',
       port: '4455',
@@ -121,10 +138,10 @@ const menuItems: Ref<MenuItem[]> = ref([
     }
   },
   {
-    id: 1,
+    id: 2,
     label: 'Testing',
     subtitle: 'ws://10.10.0.214:4455',
-    letter: { text: 'T', color: 'bg-gradient-to-r from-indigo-500 to-indigo-700' },
+    letter: { text: 'T', color: 'indigo' },
     data: {
       ip: '10.10.0.214',
       port: '4455',
@@ -132,10 +149,10 @@ const menuItems: Ref<MenuItem[]> = ref([
     }
   },
   {
-    id: 2,
+    id: 3,
     label: 'Remote',
     subtitle: 'ws://pxy1.example.com:4455',
-    letter: { text: 'R', color: 'bg-gradient-to-r from-amber-500 to-amber-700' },
+    letter: { text: 'R', color: 'amber' },
     data: {
       ip: 'pxy1.example.com',
       port: '4455',
@@ -145,6 +162,22 @@ const menuItems: Ref<MenuItem[]> = ref([
 ])
 
 const setActiveConnection = async (item: MenuItem) => {
+  if (!item.data) {
+    switch (item.id) {
+      case 0:
+        openPopup('connect')
+        break
+      default:
+        error({
+          type: 'error',
+          title: 'Action not implemented',
+          message: 'This action is not implemented yet'
+        })
+        break
+    }
+    return
+  }
+
   try {
     await store.connect(item.data as Connection)
   } catch (e) {

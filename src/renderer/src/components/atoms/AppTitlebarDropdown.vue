@@ -13,7 +13,8 @@
       </div>
       <div
         v-if="props.letter"
-        :class="['w-6 h-6 rounded flex justify-center items-center', props.letter.color]"
+        class="w-6 h-6 rounded flex justify-center items-center"
+        :style="calculateLetterColor(props.letter.color)"
       >
         {{ props.letter.text }}
       </div>
@@ -55,14 +56,15 @@
             >
               <div v-if="item.letter">
                 <div
-                  :class="['w-6 h-6 rounded flex justify-center items-center', item.letter.color]"
+                  class="w-6 h-6 rounded flex justify-center items-center"
+                  :style="calculateLetterColor(item.letter.color)"
                 >
                   {{ item.letter.text }}
                 </div>
               </div>
               <div class="flex items-center">
                 <i
-                  v-if="props.icon"
+                  v-if="item.icon"
                   :class="['fal fa-fw mr-1', `fa-${item.icon?.name}`]"
                 />
                 <div>
@@ -79,8 +81,9 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref } from 'vue'
+import { computed, PropType, ref } from 'vue'
 import { OnClickOutside } from '@vueuse/components'
+import { colorPalette } from '../../color-palette'
 
 const emit = defineEmits(['select'])
 
@@ -116,6 +119,13 @@ const props = defineProps({
     required: false
   }
 })
+
+const calculateLetterColor = (color: string | undefined) => {
+  const { r, g, b } = colorPalette[color ?? 'red']
+  return {
+    'background': `linear-gradient(90deg, rgba(${r}, ${g}, ${b}, 1) 0%, rgba(${r}, ${g}, ${b}, .9) 100%)`,
+  }
+}
 
 const open = ref(false)
 

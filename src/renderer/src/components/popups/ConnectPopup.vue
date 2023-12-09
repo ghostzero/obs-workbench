@@ -105,7 +105,7 @@ const { close } = usePopupStore()
 const connecting = ref(false)
 
 const credentials: Ref<Connection> = ref({
-  ip: '10.10.0.214',
+  ip: 'localhost',
   port: '4455',
   password: 'o0vDZDSu8O975flK'
 })
