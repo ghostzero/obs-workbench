@@ -66,22 +66,83 @@
         </AppButton>
       </form>
       <div class="border-r border-r-zinc-700" />
-      <div>
-        <div class="grid grid-cols-2 gap-5">
+      <div class="relative">
+        <div
+          v-if="!user || user.connections.length === 0"
+          class="absolute inset-0 flex text-center items-center justify-center flex-col gap-3 z-10"
+        >
+          <template v-if="!user">
+            <div class="text-xl font-bold">
+              Login to Manage Your Servers
+            </div>
+            <div>
+              With a free account you can manage your servers and save your settings.
+            </div>
+            <div>
+              <AppButton
+                class="px-8 !bg-zinc-700"
+                variant="outline"
+                @click="openPopup('login')"
+              >
+                Login / Create Account
+              </AppButton>
+            </div>
+          </template>
+          <template v-else>
+            <div class="text-xl font-bold">
+              No Servers Connected
+            </div>
+            <div>
+              You have no servers connected to your account.
+            </div>
+            <div>
+              <AppButton
+                class="px-8 !bg-zinc-700"
+                variant="outline"
+                @click="openServerManager"
+              >
+                Manage Servers
+              </AppButton>
+            </div>
+          </template>
+        </div>
+        <div
+          :class="['grid grid-cols-2 gap-5', {
+            'opacity-20 pointer-events-none': !user || user.connections.length === 0
+          }]"
+        >
+          <template
+            v-if="user && user.connections.length"
+          >
+            <template
+              v-for="connection in user?.connections"
+              :key="connection.id"
+            >
+              <AppServerQuickConnect
+                :name="connection.name"
+                @connect="quickConnect(connection)"
+              />
+            </template>
+          </template>
           <template
             v-for="i in 4"
+            v-else
             :key="i"
           >
-            <AppServerQuickConnect name="OBS Server" />
+            <AppServerQuickConnect name="My OBSServer" />
           </template>
         </div>
       </div>
     </div>
 
     <template #footer>
-      <AppProxyBanner class="mt-12 mb-6" />
+      <AppProxyBanner
+        v-if="!userStore.user"
+        class="mt-12"
+        @login="openPopup('login')"
+      />
 
-      <div class="text-white/50 text-xs text-center font-light">
+      <div class="text-white/50 text-xs text-center font-light mt-6">
         This project is not affiliated with OBS or any of their partners. All copyrights reserved to their respective
         owners. I do not recommend using this in production environments as it is still in early development.
       </div>
@@ -99,8 +160,10 @@ import { usePopupStore } from '../../store/popup'
 import { useNotificationStore } from '../../store/notification'
 import AppServerQuickConnect from '../atoms/AppServerQuickConnect.vue'
 import AppProxyBanner from '../molecules/AppProxyBanner.vue'
+import { useUserStore } from '../../store/user'
+import { storeToRefs } from 'pinia'
 
-const store = useAppStore()
+const appStore = useAppStore()
 const { close } = usePopupStore()
 const connecting = ref(false)
 
@@ -111,11 +174,14 @@ const credentials: Ref<Connection> = ref({
 })
 
 const { error } = useNotificationStore()
+const { openPopup } = usePopupStore()
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
 
 const connect = async () => {
   connecting.value = true
   try {
-    await store.connect(credentials.value)
+    await appStore.connect(credentials.value)
     close()
   } catch (e) {
     error({
@@ -127,5 +193,14 @@ const connect = async () => {
   } finally {
     connecting.value = false
   }
+}
+
+const quickConnect = (connection: Connection) => {
+  credentials.value = connection
+  connect()
+}
+
+const openServerManager = () => {
+  window.open('http://localhost:8000/connections', '_blank')
 }
 </script>

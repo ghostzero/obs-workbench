@@ -17,7 +17,10 @@
             <div><i class="fad fa-check-circle fa-fw text-emerald-500" /> Server video traffic</div>
           </div>
           <div>
-            <AppButton class="px-8">
+            <AppButton
+              class="px-8"
+              @click="emit('login')"
+            >
               Create an account for free
             </AppButton>
           </div>
@@ -35,7 +38,8 @@
 </template>
 
 <script setup lang="ts">
-
 import AppSection from './AppSection.vue'
 import AppButton from '../atoms/AppButton.vue'
+
+const emit = defineEmits(['login'])
 </script>

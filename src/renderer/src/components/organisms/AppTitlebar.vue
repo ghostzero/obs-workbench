@@ -25,7 +25,7 @@
           >
             <AppTitlebarDropdown
               :menu-items="secondLevelMenu.menuItems"
-              @select="() => {}"
+              @select="(e) => e.click()"
             >
               {{ secondLevelMenu.label }}
             </AppTitlebarDropdown>
@@ -82,11 +82,15 @@ import AppControls from '../atoms/AppControls.vue'
 import { usePopupStore } from '../../store/popup'
 import { colorPalette } from '../../color-palette'
 import AppElectronControls from '../molecules/AppElectronControls.vue'
+import { useUserStore } from '../../store/user'
+import { storeToRefs } from 'pinia'
 
 const store = useAppStore()
 const { error } = useNotificationStore()
 const { openPopup } = usePopupStore()
 const { obs } = useObs()
+const userStore = useUserStore()
+const {user} = storeToRefs(userStore);
 
 const showSecondLevelMenu = ref(false)
 
@@ -97,12 +101,14 @@ const secondLevelMenus = ref([
       {
         id: 0,
         label: 'Sign in',
-        icon: { name: 'sign-in' }
+        icon: { name: 'sign-in' },
+        click: () => openPopup('login')
       },
       {
         id: 1,
         label: 'Sign out',
-        icon: { name: 'sign-out' }
+        icon: { name: 'sign-out' },
+        click: () => userStore.logout()
       }
     ]
   },
@@ -138,46 +144,31 @@ const secondLevelMenus = ref([
   }
 ])
 
-const menuItems: Ref<MenuItem[]> = ref([
-  {
-    id: 0,
-    label: 'Connect to a new server',
-    icon: { name: 'plus' }
-  },
-  {
-    id: 1,
-    label: 'Production',
-    subtitle: 'ws://localhost:4455',
-    letter: { text: 'P', color: 'rose' },
-    data: {
-      ip: 'localhost',
-      port: '4455',
-      password: 'o0vDZDSu8O975flK'
+const menuItems: Ref<MenuItem[]> = computed(() => {
+  const items: MenuItem[] = [
+    {
+      id: 0,
+      label: 'Connect to a new server',
+      icon: { name: 'plus' }
     }
-  },
-  {
-    id: 2,
-    label: 'Testing',
-    subtitle: 'ws://10.10.0.214:4455',
-    letter: { text: 'T', color: 'indigo' },
-    data: {
-      ip: '10.10.0.214',
-      port: '4455',
-      password: 'o0vDZDSu8O975flK'
-    }
-  },
-  {
-    id: 3,
-    label: 'Remote',
-    subtitle: 'ws://pxy1.example.com:4455',
-    letter: { text: 'R', color: 'amber' },
-    data: {
-      ip: 'pxy1.example.com',
-      port: '4455',
-      password: 'o0vDZDSu8O975flK'
-    }
-  }
-])
+  ];
+
+  user.value?.connections?.forEach((connection) => {
+    items.push({
+      id: connection.id,
+      label: connection.name,
+      subtitle: `ws://${connection.ip}:${connection.port}`,
+      letter: { text: connection.name[0], color: connection.color },
+      data: {
+        ip: connection.ip,
+        port: connection.port,
+        password: connection.password
+      }
+    })
+  })
+
+  return items
+})
 
 const calculateViaGradient = computed(() => {
   const { r, g, b } = colorPalette[activeConnection.value.letter?.color ?? 'red']
@@ -210,7 +201,11 @@ const activeConnection = computed(() => {
     return connection.ip === store.connection.ip &&
       connection.port === store.connection.port &&
       connection.password === store.connection.password
-  }) ?? menuItems.value[0]
+  }) ?? {
+    label: store.connection.ip,
+    subtitle: `ws://${store.connection.ip}:${store.connection.port}`,
+    letter: { text: store.connection.ip[0], color: 'rose' },
+  }
 })
 
 const setActiveConnection = async (item: MenuItem) => {

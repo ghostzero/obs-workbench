@@ -48,6 +48,13 @@
         :icon="{ name: 'unlink' }"
         title="Not Connected"
         description="Your **Workspace** is not connected."
+        :actions="[
+          {
+            label: 'Connect',
+            variant: 'outline',
+            onClick: () => openPopup('connect')
+          }
+        ]"
       />
     </div>
   </div>
@@ -61,6 +68,8 @@ import AppTitlebar from './components/organisms/AppTitlebar.vue'
 import AppGoldenLayout from './components/molecules/AppGoldenLayout.vue'
 import { useAppStore } from './store/app'
 import AppEmptyState from './components/atoms/AppEmptyState.vue'
+import { usePopupStore } from './store/popup'
 
 const store = useAppStore()
+const { openPopup } = usePopupStore()
 </script>

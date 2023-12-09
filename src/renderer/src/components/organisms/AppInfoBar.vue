@@ -1,16 +1,20 @@
 <template>
   <div class="md:flex md:items-center md:justify-between md:space-x-5">
     <div class="flex shrink-0 items-center space-x-3">
-      <div class="flex-shrink-0">
+      <div
+        v-if="user"
+        class="flex-shrink-0"
+      >
         <img
+          v-if="user"
           class="h-12 w-12 rounded-full"
-          src="https://api.own3d.pro/v1/resolvers/avatars/twitch/ghostzero"
+          :src="user.avatar_url"
           alt="avatar"
-        />
+        >
       </div>
       <div>
         <h1 class="text-2xl font-bold text-white">
-          Hi, GhostZero!
+          Hi, {{ user?.name || 'Anonymous' }}!
         </h1>
         <p class="text-sm font-medium text-zinc-100">
           Connected to
@@ -80,8 +84,12 @@
 <script setup lang="ts">
 import AppInfoBadge from '../atoms/AppInfoBadge.vue'
 import { useAppStore } from '../../store/app'
+import { useUserStore } from '../../store/user'
+import { storeToRefs } from 'pinia'
 
 const store = useAppStore()
+const userStore = useUserStore()
+const {user} = storeToRefs(userStore);
 
 const colors = (value: number, thresholds: number[], colors: string[]) => {
   for (let i = 0; i < thresholds.length; i++) {

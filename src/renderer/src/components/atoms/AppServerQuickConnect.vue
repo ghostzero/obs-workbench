@@ -13,7 +13,7 @@
       <a
         href="#"
         class="stretched-link"
-        @click.prevent=""
+        @click.prevent="emit('connect')"
       >
         {{ props.name }}
       </a>
@@ -22,6 +22,8 @@
 </template>
 
 <script setup lang="ts">
+const emit = defineEmits(['connect'])
+
 const props = defineProps({
   name: {
     type: String,

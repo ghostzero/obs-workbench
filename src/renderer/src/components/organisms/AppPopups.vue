@@ -1,11 +1,15 @@
 <template>
   <div
-      v-if="store.name"
-      class="fixed inset-0 bg-zinc-950/90 z-50 flex items-center justify-center"
+    v-if="store.name"
+    class="fixed inset-0 bg-zinc-950/90 z-50 flex items-center justify-center"
   >
-    <ConnectPopup v-if="store.name === 'connect'" v-bind="store.data" />
+    <ConnectPopup
+      v-if="store.name === 'connect'"
+      v-bind="store.data"
+    />
     <ConfirmPopup />
     <AddSourcePopup />
+    <LoginPopup />
   </div>
 </template>
 
@@ -14,6 +18,7 @@ import { usePopupStore } from '../../store/popup'
 import ConnectPopup from '../popups/ConnectPopup.vue'
 import ConfirmPopup from '../popups/ConfirmPopup.vue'
 import AddSourcePopup from '../popups/AddSourcePopup.vue'
+import LoginPopup from '../popups/LoginPopup.vue'
 
 const store = usePopupStore()
 </script>
