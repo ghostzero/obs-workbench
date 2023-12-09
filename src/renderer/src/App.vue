@@ -40,6 +40,16 @@
         </footer>
       </main>
     </template>
+    <div
+      v-else
+      class="h-[calc(100vh-52px)]"
+    >
+      <AppEmptyState
+        :icon="{ name: 'unlink' }"
+        title="Not Connected"
+        description="Your **Workspace** is not connected."
+      />
+    </div>
   </div>
 </template>
 
@@ -50,6 +60,7 @@ import AppNotifications from './components/organisms/AppNotifications.vue'
 import AppTitlebar from './components/organisms/AppTitlebar.vue'
 import AppGoldenLayout from './components/molecules/AppGoldenLayout.vue'
 import { useAppStore } from './store/app'
+import AppEmptyState from './components/atoms/AppEmptyState.vue'
 
 const store = useAppStore()
 </script>
