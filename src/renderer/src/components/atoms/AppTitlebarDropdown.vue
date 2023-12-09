@@ -65,7 +65,7 @@
               <div class="flex items-center">
                 <i
                   v-if="item.icon"
-                  :class="['fal fa-fw mr-1', `fa-${item.icon?.name}`]"
+                  :class="['fal fa-fw mr-2.5', `fa-${item.icon?.name}`]"
                 />
                 <div>
                   <div>{{ item.label }}</div>
@@ -81,7 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType, ref } from 'vue'
+import { PropType, ref } from 'vue'
 import { OnClickOutside } from '@vueuse/components'
 import { colorPalette } from '../../color-palette'
 

@@ -1,12 +1,9 @@
-# Remote Control for OBS (ALPHA)
+# OBS Workbench (ALPHA)
 
 With OBS Remote Control you can control your OBS Studio from other devices in the same network. This is a web
 application that runs in your browser and communicates with OBS Studio via WebSockets.
 
-![Screenshot](docs/screenshots/chrome_tejCpT9xIB.gif)
-
-Demo is available at [https://open.obs-workbench.com/](https://studio.ghostzero.dev/) and currently **only
-supports Studio Mode**.
+![Screenshot](docs/screenshots/electron_24GIwtPnu8.gif)
 
 > This project is not affiliated with OBS or any of their partners. All copyrights reserved to their respective owners.
 > I do not recommend using this in production environments as it is still in early development.

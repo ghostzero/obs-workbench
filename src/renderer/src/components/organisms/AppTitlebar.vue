@@ -4,74 +4,75 @@
     :style="calculateViaGradient"
   >
     <div class="flex items-center justify-between px-8 py-2 gap-5">
-      <div class="flex items-center gap-5">
+      <OnClickOutside
+        class="flex items-center gap-5"
+        @trigger="showSecondLevelMenu = false"
+      >
         <button
           type="button"
           class="flex justify-center items-center hover:bg-white/10 w-8 h-8 rounded"
+          @click="showSecondLevelMenu = !showSecondLevelMenu"
         >
           <i class="fas fa-fw fa-bars" />
         </button>
 
-        <AppTitlebarDropdown
-          :letter="activeConnection.letter"
-          :menu-items="menuItems"
-          @select="setActiveConnection"
+        <template
+          v-if="showSecondLevelMenu"
         >
-          {{ activeConnection.label }}
-        </AppTitlebarDropdown>
+          <template
+            v-for="secondLevelMenu in secondLevelMenus"
+            :key="secondLevelMenu.label"
+          >
+            <AppTitlebarDropdown
+              :menu-items="secondLevelMenu.menuItems"
+              @select="() => {}"
+            >
+              {{ secondLevelMenu.label }}
+            </AppTitlebarDropdown>
+          </template>
+        </template>
 
-        <AppTitlebarDropdown
-          v-if="store.connected"
-          :icon="{name: 'user'}"
-          :menu-items="profileMenuItems"
-          :selected="store.profileList.currentProfileName"
-          @select="setActiveProfile"
-        >
-          {{ store.profileList.currentProfileName }}
-        </AppTitlebarDropdown>
+        <template v-else>
+          <AppTitlebarDropdown
+            :letter="activeConnection.letter"
+            :menu-items="menuItems"
+            @select="setActiveConnection"
+          >
+            {{ activeConnection.label }}
+          </AppTitlebarDropdown>
 
-        <AppTitlebarDropdown
-          v-if="store.connected"
-          :icon="{name: 'rectangle-history'}"
-          :menu-items="sceneCollectionMenuItems"
-          :selected="store.sceneCollectionList.currentSceneCollectionName"
-          @select="setActiveSceneCollection"
-        >
-          {{ store.sceneCollectionList.currentSceneCollectionName }}
-        </AppTitlebarDropdown>
-      </div>
+          <AppTitlebarDropdown
+            v-if="store.connected"
+            :icon="{name: 'user'}"
+            :menu-items="profileMenuItems"
+            :selected="store.profileList.currentProfileName"
+            @select="setActiveProfile"
+          >
+            {{ store.profileList.currentProfileName }}
+          </AppTitlebarDropdown>
+
+          <AppTitlebarDropdown
+            v-if="store.connected"
+            :icon="{name: 'rectangle-history'}"
+            :menu-items="sceneCollectionMenuItems"
+            :selected="store.sceneCollectionList.currentSceneCollectionName"
+            @select="setActiveSceneCollection"
+          >
+            {{ store.sceneCollectionList.currentSceneCollectionName }}
+          </AppTitlebarDropdown>
+        </template>
+      </OnClickOutside>
 
       <div class="flex items-center gap-6 -mr-6">
         <AppControls v-if="store.connected" />
-
-        <div class="flex">
-          <AppButton
-            variant="ghost-titlebar"
-            @click="minimizeWindow()"
-          >
-            <i class="fal fa-minus fa-fw" />
-          </AppButton>
-          <AppButton
-            variant="ghost-titlebar"
-            @click="maximizeWindow()"
-          >
-            <i class="fal fa-square fa-fw" />
-          </AppButton>
-          <AppButton
-            :destructive="true"
-            variant="ghost-titlebar"
-            @click="closeWindow()"
-          >
-            <i class="fal fa-times fa-fw" />
-          </AppButton>
-        </div>
+        <AppElectronControls />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import AppButton from '../atoms/AppButton.vue'
+import { OnClickOutside } from '@vueuse/components'
 import AppTitlebarDropdown, { MenuItem } from '../atoms/AppTitlebarDropdown.vue'
 import { computed, Ref, ref } from 'vue'
 import { Connection, useAppStore } from '../../store/app'
@@ -80,45 +81,62 @@ import { useNotificationStore } from '../../store/notification'
 import AppControls from '../atoms/AppControls.vue'
 import { usePopupStore } from '../../store/popup'
 import { colorPalette } from '../../color-palette'
+import AppElectronControls from '../molecules/AppElectronControls.vue'
 
 const store = useAppStore()
 const { error } = useNotificationStore()
 const { openPopup } = usePopupStore()
 const { obs } = useObs()
 
-const calculateViaGradient = computed(() => {
-  const { r, g, b } = colorPalette[activeConnection.value.letter?.color ?? 'red']
-  return {
-    'background': `linear-gradient(90deg, #18181B 0px, rgba(${r}, ${g}, ${b}, .4) 95px, #18181B 300px)`,
-    '-webkit-app-region': 'drag'
+const showSecondLevelMenu = ref(false)
+
+const secondLevelMenus = ref([
+  {
+    label: 'Account',
+    menuItems: [
+      {
+        id: 0,
+        label: 'Sign in',
+        icon: { name: 'sign-in' }
+      },
+      {
+        id: 1,
+        label: 'Sign out',
+        icon: { name: 'sign-out' }
+      }
+    ]
+  },
+  {
+    label: 'Help',
+    menuItems: [
+      {
+        id: 0,
+        label: 'About',
+        icon: { name: 'info-circle' }
+      },
+      {
+        id: 1,
+        label: 'Check for updates',
+        icon: { name: 'download' }
+      },
+      {
+        id: 2,
+        label: 'Report a bug',
+        icon: { name: 'bug' }
+      },
+      {
+        id: 3,
+        label: 'Join the Discord',
+        icon: { name: 'discord' }
+      },
+      {
+        id: 4,
+        label: 'Open the Wiki',
+        icon: { name: 'book' }
+      }
+    ]
   }
-})
-
-const profileMenuItems = computed(() => {
-  return store.profileList.profiles.map((profile) => ({
-    id: profile,
-    label: profile,
-    icon: { name: 'user' }
-  }))
-})
-
-const sceneCollectionMenuItems = computed(() => {
-  return store.sceneCollectionList.sceneCollections.map((sceneCollection) => ({
-    id: sceneCollection,
-    label: sceneCollection,
-    icon: { name: 'rectangle-history' }
-  }))
-})
-
-const activeConnection = computed(() => {
-  return menuItems.value.find((item) => {
-    if (!item.data) return false
-    const connection = item.data as Connection
-    return connection.ip === store.connection.ip &&
-      connection.port === store.connection.port &&
-      connection.password === store.connection.password
-  }) ?? menuItems.value[0]
-})
+])
 
 const menuItems: Ref<MenuItem[]> = ref([
   {
@@ -161,6 +179,40 @@ const menuItems: Ref<MenuItem[]> = ref([
   }
 ])
 
+const calculateViaGradient = computed(() => {
+  const { r, g, b } = colorPalette[activeConnection.value.letter?.color ?? 'red']
+  return {
+    'background': `linear-gradient(90deg, #18181B 0px, rgba(${r}, ${g}, ${b}, .4) 95px, #18181B 300px)`,
+    '-webkit-app-region': 'drag'
+  }
+})
+
+const profileMenuItems = computed(() => {
+  return store.profileList.profiles.map((profile) => ({
+    id: profile,
+    label: profile,
+    icon: { name: 'user' }
+  }))
+})
+
+const sceneCollectionMenuItems = computed(() => {
+  return store.sceneCollectionList.sceneCollections.map((sceneCollection) => ({
+    id: sceneCollection,
+    label: sceneCollection,
+    icon: { name: 'rectangle-history' }
+  }))
+})
+
+const activeConnection = computed(() => {
+  return menuItems.value.find((item) => {
+    if (!item.data) return false
+    const connection = item.data as Connection
+    return connection.ip === store.connection.ip &&
+      connection.port === store.connection.port &&
+      connection.password === store.connection.password
+  }) ?? menuItems.value[0]
+})
+
 const setActiveConnection = async (item: MenuItem) => {
   if (!item.data) {
     switch (item.id) {
@@ -200,21 +252,5 @@ const setActiveSceneCollection = (item: MenuItem) => {
   obs.call('SetCurrentSceneCollection', {
     'sceneCollectionName': item.id as string
   })
-}
-
-const minimizeWindow = () => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  window.api.minimizeWindow()
-}
-const maximizeWindow = () => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  window.api.maximizeWindow()
-}
-const closeWindow = () => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  window.api.closeWindow()
 }
 </script>
