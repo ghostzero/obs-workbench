@@ -100,10 +100,7 @@ const observer = new ResizeObserver((entries) => {
 })
 
 onMounted(() => {
-  if (view.value) {
-    observer.observe(view.value)
-    console.log('observing')
-  }
+  if (view.value) observer.observe(view.value)
 })
 
 onBeforeUnmount(() => {

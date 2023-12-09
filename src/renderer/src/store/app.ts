@@ -3,6 +3,9 @@ import { EventSubscription, OBSEventTypes } from 'obs-websocket-js'
 import { useObs } from '../composables/useObs'
 
 const { obs: websocket } = useObs()
+const unsupportedAudioInputs: string[] = [
+  'text_ft2_source_v2', 'image_source', 'monitor_capture'
+]
 
 export interface SceneItem {
   inputKind: string,
@@ -101,6 +104,9 @@ export interface State {
     outputCongestion: number,
     outputSkippedFrames: number,
     outputTotalFrames: number,
+  },
+  intervals: {
+    [key: string]: NodeJS.Timeout
   }
 }
 
@@ -172,7 +178,8 @@ export const useAppStore = defineStore('obs', {
         outputCongestion: 0,
         outputSkippedFrames: 0,
         outputTotalFrames: 0
-      }
+      },
+      intervals: {}
     }
   },
   getters: {
@@ -182,9 +189,7 @@ export const useAppStore = defineStore('obs', {
   },
   actions: {
     async connect(url: string, password: string): Promise<void> {
-      if (this.connected) {
-        await websocket.disconnect()
-      }
+      await this.disconnect()
 
       this.url = url
       this.hello = await websocket.connect(url, password, {
@@ -201,34 +206,36 @@ export const useAppStore = defineStore('obs', {
       })
 
       await this.fetchEntireState()
-      this.recordStatus = await websocket.call('GetRecordStatus')
-      this.streamStatus = await websocket.call('GetStreamStatus')
 
       this.inputs.forEach((input) => {
-        websocket.call('GetInputVolume', { inputName: input.inputName }).then((response) => {
-          this.inputVolumes[input.inputName] = {
-            inputVolumeDb: response.inputVolumeDb,
-            inputVolumeMul: response.inputVolumeMul,
-            inputMuted: this.inputVolumes[input.inputName]?.inputMuted ?? false
-          }
-        })
-        websocket.call('GetInputMute', { inputName: input.inputName }).then((response) => {
-          this.inputVolumes[input.inputName] = {
-            inputVolumeDb: this.inputVolumes[input.inputName]?.inputVolumeDb ?? 0,
-            inputVolumeMul: this.inputVolumes[input.inputName]?.inputVolumeMul ?? 0,
-            inputMuted: response.inputMuted
-          }
-        })
+        if (unsupportedAudioInputs.includes(input.inputKind)) {
+          // we don't support these inputs
+          return
+        }
+
+        websocket.call('GetInputVolume', { inputName: input.inputName })
+          .then((response) => {
+            this.inputVolumes[input.inputName] = {
+              inputVolumeDb: response.inputVolumeDb,
+              inputVolumeMul: response.inputVolumeMul,
+              inputMuted: this.inputVolumes[input.inputName]?.inputMuted ?? false
+            }
+          })
+          .catch((e) => {
+            console.error(e, input)
+          })
+        websocket.call('GetInputMute', { inputName: input.inputName })
+          .then((response) => {
+            this.inputVolumes[input.inputName] = {
+              inputVolumeDb: this.inputVolumes[input.inputName]?.inputVolumeDb ?? 0,
+              inputVolumeMul: this.inputVolumes[input.inputName]?.inputVolumeMul ?? 0,
+              inputMuted: response.inputMuted
+            }
+          })
+          .catch((e) => {
+            console.error(e, input)
+          })
       })
-
-      setInterval(async () => {
-        this.recordStatus = await websocket.call('GetRecordStatus')
-        this.streamStatus = await websocket.call('GetStreamStatus')
-      }, 1000)
-
-      setInterval(async () => {
-        this.stats = await websocket.call('GetStats')
-      }, 3000)
 
       websocket.on('CurrentProgramSceneChanged', (e: OBSEventTypes['CurrentProgramSceneChanged']) => {
         this.currentProgramSceneName = e.sceneName
@@ -245,7 +252,6 @@ export const useAppStore = defineStore('obs', {
         if (this.currentPreviewSceneName === e.sceneName) {
           console.log(e.sceneItems) // {sceneItemId: 13, sceneItemIndex: 1}[]
           console.log(this.sceneItems) // {sceneItemId: 13, sceneItemIndex: 1}[]
-
         }
       })
       websocket.on('SceneItemEnableStateChanged', (e: OBSEventTypes['SceneItemEnableStateChanged']) => {
@@ -336,6 +342,17 @@ export const useAppStore = defineStore('obs', {
 
       this.connected = true
     },
+    async disconnect(): Promise<void> {
+      await websocket.disconnect()
+      this.connected = false
+    },
+    async registerInterval(name: string, callback: () => Promise<void>, interval: number) {
+      if (this.intervals[name]) {
+        clearInterval(this.intervals[name])
+      }
+      await callback()
+      this.intervals[name] = setInterval(callback, interval)
+    },
     async fetchEntireState() {
       const response = await websocket.call('GetSceneList')
 
@@ -347,7 +364,6 @@ export const useAppStore = defineStore('obs', {
       this.currentProgramSceneName = response.currentProgramSceneName
       this.scenes = response.scenes as unknown as State['scenes']
       this.inputs = (await websocket.call('GetInputList')).inputs as unknown as State['inputs']
-      this.stats = await websocket.call('GetStats')
       this.videoSettings = await websocket.call('GetVideoSettings')
       this.videoSettings = await websocket.call('GetVideoSettings')
       this.profileList = {
@@ -359,6 +375,15 @@ export const useAppStore = defineStore('obs', {
         changing: false
       }
       await this.updateSceneItems()
+
+      await this.registerInterval('status', async () => {
+        this.recordStatus = await websocket.call('GetRecordStatus')
+        this.streamStatus = await websocket.call('GetStreamStatus')
+      }, 1000)
+
+      await this.registerInterval('stats', async () => {
+        this.stats = await websocket.call('GetStats')
+      }, 3000)
 
       console.log('inputs', this.inputs)
     },

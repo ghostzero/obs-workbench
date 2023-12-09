@@ -17,6 +17,7 @@
 
 <script setup lang="ts">
 import { getCurrentInstance, nextTick, onMounted, PropType, readonly, ref } from 'vue'
+import GlComponent from './AppGoldenLayoutComponent.vue'
 import {
   ComponentContainer,
   ComponentItemConfig,
@@ -29,7 +30,6 @@ import {
   StackItemConfig,
   VirtualLayout
 } from 'golden-layout'
-import GlComponent from './GlComponent.vue'
 
 /*******************
  * Prop
@@ -197,7 +197,7 @@ onMounted(() => {
       )
     }
 
-    console.log(component.glc[0], visible)
+    // console.log(component.glc[0], visible)
 
     component.glc[0].setVisibility(visible)
   }

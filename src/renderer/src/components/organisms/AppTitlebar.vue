@@ -43,7 +43,7 @@
       </div>
 
       <div class="flex items-center gap-6 -mr-6">
-        <Controls v-if="store.connected" />
+        <AppControls v-if="store.connected" />
 
         <div class="flex">
           <AppButton
@@ -72,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import Controls from '../Controls.vue'
+import Controls from '../AppControls.vue'
 import AppButton from '../atoms/AppButton.vue'
 import AppTitlebarDropdown, { MenuItem } from '../atoms/AppTitlebarDropdown.vue'
 import { computed, Ref, ref } from 'vue'
