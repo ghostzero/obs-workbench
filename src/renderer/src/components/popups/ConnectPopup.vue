@@ -18,7 +18,7 @@
         />
         <AppInput
           id="port"
-          v-model="credentials.port"
+          v-model.number="credentials.port"
           name="port"
           label="Server Port"
         />
@@ -93,8 +93,8 @@
 import AppPopup from '../molecules/AppPopup.vue'
 import AppInput from '../atoms/AppInput.vue'
 import AppButton from '../atoms/AppButton.vue'
-import { ref } from 'vue'
-import { useAppStore } from '../../store/app'
+import { Ref, ref } from 'vue'
+import { Connection, useAppStore } from '../../store/app'
 import { usePopupStore } from '../../store/popup'
 import { useNotificationStore } from '../../store/notification'
 import AppServerQuickConnect from '../atoms/AppServerQuickConnect.vue'
@@ -104,7 +104,7 @@ const store = useAppStore()
 const { close } = usePopupStore()
 const connecting = ref(false)
 
-const credentials = ref({
+const credentials: Ref<Connection> = ref({
   ip: '10.10.0.214',
   port: '4455',
   password: 'o0vDZDSu8O975flK'
@@ -115,7 +115,7 @@ const { error } = useNotificationStore()
 const connect = async () => {
   connecting.value = true
   try {
-    await store.connect(`ws://${credentials.value.ip}:${credentials.value.port}`, credentials.value.password)
+    await store.connect(credentials.value)
     close()
   } catch (e) {
     error({

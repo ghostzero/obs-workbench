@@ -25,8 +25,14 @@ export interface InputVolumeMeter {
   inputName: string,
 }
 
+export interface Connection {
+  ip: string,
+  port: string,
+  password: string
+}
+
 export interface State {
-  url: string,
+  connection: Connection,
   connected: boolean,
   currentPreviewSceneName: string,
   currentProgramSceneName: string,
@@ -113,7 +119,11 @@ export interface State {
 export const useAppStore = defineStore('obs', {
   state: (): State => {
     return {
-      url: '',
+      connection: {
+        ip: 'localhost',
+        port: '4444',
+        password: ''
+      },
       connected: false,
       currentPreviewSceneName: '',
       currentProgramSceneName: '',
@@ -188,11 +198,12 @@ export const useAppStore = defineStore('obs', {
     }
   },
   actions: {
-    async connect(url: string, password: string): Promise<void> {
+    async connect(connection: Connection): Promise<void> {
       await this.disconnect()
 
-      this.url = url
-      this.hello = await websocket.connect(url, password, {
+      this.connection = connection
+      const url = `ws://${connection.ip}:${connection.port}`
+      this.hello = await websocket.connect(url, connection.password, {
         eventSubscriptions: EventSubscription.All | EventSubscription.InputVolumeMeters,
         rpcVersion: 1
       }) as unknown as State['hello']

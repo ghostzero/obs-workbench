@@ -1,12 +1,22 @@
 <template>
   <div class="md:flex md:items-center md:justify-between md:space-x-5">
-    <div class="flex shrink-0 items-start space-x-5">
+    <div class="flex shrink-0 items-center space-x-3">
+      <div class="flex-shrink-0">
+        <img
+          class="h-12 w-12 rounded-full"
+          src="https://api.own3d.pro/v1/resolvers/avatars/twitch/ghostzero"
+          alt="avatar"
+        />
+      </div>
       <div>
         <h1 class="text-2xl font-bold text-white">
-          Anonymous
+          Hi, GhostZero!
         </h1>
         <p class="text-sm font-medium text-zinc-100">
-          Connected to <b class="text-zinc-400">{{ store.url }}</b>
+          Connected to
+          <b class="text-zinc-400">
+            ws://{{ store.connection.ip }}:{{ store.connection.port }}
+          </b>
         </p>
       </div>
     </div>

@@ -33,11 +33,11 @@
 </template>
 
 <script setup lang="ts">
-import AppButton from '../components/atoms/AppButton.vue'
-import { useObs } from '../composables/useObs'
-import { useAppStore } from '../store/app'
 import { watch } from 'vue'
-import { useTimeoutable } from '../composables/useTimeoutable'
+import { useObs } from '../../composables/useObs'
+import { useAppStore } from '../../store/app'
+import { useTimeoutable } from '../../composables/useTimeoutable'
+import AppButton from './AppButton.vue'
 
 const { obs } = useObs()
 const store = useAppStore()

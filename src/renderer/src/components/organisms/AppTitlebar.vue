@@ -13,12 +13,11 @@
         </button>
 
         <AppTitlebarDropdown
-          v-if="store.connected"
-          :letter="{ text: 'P', color: 'bg-gradient-to-r from-primary-500 to-rose-700' }"
+          :letter="activeConnection.letter"
           :menu-items="menuItems"
           @select="setActiveConnection"
         >
-          Production
+          {{ activeConnection.label }}
         </AppTitlebarDropdown>
 
         <AppTitlebarDropdown
@@ -72,13 +71,13 @@
 </template>
 
 <script setup lang="ts">
-import Controls from '../AppControls.vue'
 import AppButton from '../atoms/AppButton.vue'
 import AppTitlebarDropdown, { MenuItem } from '../atoms/AppTitlebarDropdown.vue'
 import { computed, Ref, ref } from 'vue'
-import { useAppStore } from '../../store/app'
+import { Connection, useAppStore } from '../../store/app'
 import { useObs } from '../../composables/useObs'
 import { useNotificationStore } from '../../store/notification'
+import AppControls from '../atoms/AppControls.vue'
 
 const store = useAppStore()
 const { error } = useNotificationStore()
@@ -98,6 +97,15 @@ const sceneCollectionMenuItems = computed(() => {
     label: sceneCollection,
     icon: { name: 'rectangle-history' }
   }))
+})
+
+const activeConnection = computed(() => {
+  return menuItems.value.find((item) => {
+    const connection = item.data as Connection
+    return connection.ip === store.connection.ip &&
+      connection.port === store.connection.port &&
+      connection.password === store.connection.password
+  }) ?? menuItems.value[0]
 })
 
 const menuItems: Ref<MenuItem[]> = ref([
@@ -137,9 +145,8 @@ const menuItems: Ref<MenuItem[]> = ref([
 ])
 
 const setActiveConnection = async (item: MenuItem) => {
-  const { ip, port, password } = item.data as { ip: string, port: string, password: string }
   try {
-    await store.connect(`ws://${ip}:${port}`, password)
+    await store.connect(item.data as Connection)
   } catch (e) {
     error({
       type: 'error',

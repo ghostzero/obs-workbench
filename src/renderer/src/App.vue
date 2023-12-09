@@ -9,7 +9,7 @@
 
     <template v-if="store.connected">
       <main class="flex flex-col gap-4 px-8 py-4 h-[calc(100vh-52px)]">
-        <AppHeader />
+        <AppInfoBar />
 
         <div class="flex-auto">
           <AppGoldenLayout />
@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import AppHeader from './components/organisms/AppHeader.vue'
+import AppInfoBar from './components/organisms/AppInfoBar.vue'
 import AppPopups from './components/organisms/AppPopups.vue'
 import AppNotifications from './components/organisms/AppNotifications.vue'
 import AppTitlebar from './components/organisms/AppTitlebar.vue'
