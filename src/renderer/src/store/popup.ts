@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 
 export interface State {
     name: string | null,
-    data: any,
+    data: object,
     confirmed: boolean,
 }
 
@@ -15,11 +15,11 @@ export const usePopupStore = defineStore('popup', {
         }
     },
     actions: {
-        openPopup(name: string, data: any = {}): void {
+        openPopup(name: string, data: object = {}): void {
             this.name = name
             this.data = data
         },
-        async confirm(data: any): Promise<boolean> {
+        async confirm(data: object): Promise<boolean> {
             this.name = 'confirm'
             this.data = data
 
@@ -33,7 +33,7 @@ export const usePopupStore = defineStore('popup', {
                 }, 100)
             })
         },
-        close(confirmed: boolean = false): void {
+        close(confirmed = false): void {
             this.name = null
             this.data = {}
             this.confirmed = confirmed

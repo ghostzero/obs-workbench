@@ -9,7 +9,7 @@
         :key="pair[0]"
         :ref="GlcKeyPrefix + pair[0]"
       >
-        <component :is="pair[1]"></component>
+        <component :is="pair[1]" />
       </gl-component>
     </div>
   </div>
@@ -115,7 +115,7 @@ const loadGLLayout = async (
       | RowOrColumnItemConfig[]
       | StackItemConfig[]
       | ComponentItemConfig[]
-    for (let itemConfig of content) {
+    for (const itemConfig of content) {
       if (itemConfig.type == 'component') {
         index = addComponent(
           itemConfig.componentType as string,
@@ -153,8 +153,8 @@ onMounted(() => {
 
   const onResize = () => {
     const dom = GLRoot.value
-    let width = dom ? dom.offsetWidth : 0
-    let height = dom ? dom.offsetHeight : 0
+    const width = dom ? dom.offsetWidth : 0
+    const height = dom ? dom.offsetHeight : 0
     GLayout.setSize(width, height)
   }
 

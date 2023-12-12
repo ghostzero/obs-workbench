@@ -4,14 +4,14 @@
     <AppButton
       variant="ghost-titlebar"
     >
-      <i class="fal fa-question-circle fa-fw mr-1"></i>
+      <i class="fal fa-question-circle fa-fw mr-1" />
       Help
     </AppButton>
 
     <AppButton
       variant="ghost-titlebar"
     >
-      <i class="fal fa-sparkles fa-fw"></i>
+      <i class="fal fa-sparkles fa-fw" />
     </AppButton>
 
     <AppButton
@@ -61,5 +61,4 @@ const {
 }, { timeout: 5000, state: store.streamStatus.outputActive })
 
 watch(() => store.streamStatus.outputActive, streamingStateChanged, { deep: true })
-
 </script>

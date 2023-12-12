@@ -14,6 +14,7 @@ export interface State {
     name: string
     email: string
     email_verified_at: string | null
+    profile_photo_url: string
     created_at: string
     updated_at: string
     connections: StoredConnection[]

@@ -8,7 +8,7 @@
         <img
           v-if="user"
           class="h-12 w-12 rounded-full"
-          :src="user.avatar_url"
+          :src="user.profile_photo_url"
           alt="avatar"
         >
       </div>

@@ -27,13 +27,15 @@
 </template>
 
 <script setup lang="ts">
+import { PropType } from 'vue'
+
 const props = defineProps({
   color: {
-    type: String,
+    type: String as PropType<'green' | 'orange' | 'red' | 'gray'>,
     default: 'gray'
   },
   indicatorColor: {
-    type: String,
+    type: String as PropType<'green' | 'orange' | 'red' | 'gray'>,
     default: 'gray'
   }
 })

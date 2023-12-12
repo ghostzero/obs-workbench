@@ -34,13 +34,15 @@
 </template>
 
 <script setup lang="ts">
+import { PropType } from 'vue'
+
 const props = defineProps({
   type: {
-    type: String,
+    type: String as PropType<'button' | 'submit' | 'reset'>,
     default: 'button'
   },
   variant: {
-    type: String,
+    type: String as PropType<'solid' | 'solid-titlebar' | 'ghost' | 'ghost-titlebar' | 'outline'>,
     default: 'solid'
   },
   loading: {

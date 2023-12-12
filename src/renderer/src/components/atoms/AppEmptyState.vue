@@ -25,33 +25,31 @@
 
 <script setup lang="ts">
 import { PropType } from 'vue'
-import MarkdownIt from "markdown-it";
+import MarkdownIt from 'markdown-it'
 import AppButton from './AppButton.vue'
 
-const markdown = new MarkdownIt();
+const markdown = new MarkdownIt()
 
 const props = defineProps({
   icon: {
     type: Object as PropType<{ name: string }>,
-    required: true,
+    required: true
   },
   title: {
     type: String,
-    required: true,
+    required: true
   },
   description: {
     type: String,
-    required: true,
+    required: true
   },
   actions: {
-    type: Array as PropType<
-      {
-        label: string
-        variant: string
-        onClick: () => void
-      }[]
-    >,
-    default: () => [],
-  },
+    type: Array as PropType<{
+      label: string
+      variant: string
+      onClick: () => void
+    }[]>,
+    default: () => []
+  }
 })
 </script>

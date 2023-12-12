@@ -3,7 +3,9 @@
     <label
       :for="props.id"
       class="block text-sm font-medium leading-6 text-white"
-    >{{ props.label }}</label>
+    >
+      {{ props.label }}
+    </label>
     <div class="mt-2">
       <input
         :id="props.id"

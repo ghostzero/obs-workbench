@@ -6,8 +6,11 @@ import { SceneItem } from './app'
 
 const {obs} = useObs()
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface RootState {}
+
 export const useSceneStore = defineStore('scene', {
-    state: (): any => {
+    state: (): RootState => {
         return {}
     },
     actions: {

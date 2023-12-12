@@ -208,9 +208,11 @@ export const useAppStore = defineStore('obs', {
         rpcVersion: 1
       }) as unknown as State['hello']
       this.version = await websocket.call('GetVersion') as unknown as State['version']
+      const outputs = await websocket.call('GetOutputList') as unknown
 
       console.log('hello', this.hello)
       console.log('version', this.version)
+      console.log('outputs', outputs)
 
       await websocket.call('SetStudioModeEnabled', {
         studioModeEnabled: true

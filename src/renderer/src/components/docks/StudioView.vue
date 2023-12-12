@@ -115,14 +115,14 @@ const transition = async () => {
   updateScreenshots()
 }
 
-let timeoutId: any
+let timeoutId: ReturnType<typeof setTimeout>
 
 const updateScreenshots = () => {
   // Clear any existing timeout to avoid overlapping calls
   clearTimeout(timeoutId)
 
   // Store the promises in an array
-  const promises = []
+  const promises: Promise<unknown>[] = []
 
   promises.push(
     obs.call('GetSourceScreenshot', {
@@ -157,7 +157,7 @@ const updateScreenshots = () => {
     timeoutId = setTimeout(() => updateScreenshots(), 150)
   }).catch(error => {
     console.error('Failed to update screenshots:', error)
-    timeoutId = setTimeout(() => updateScreenshots(), 250)
+    timeoutId = setTimeout(() => updateScreenshots(), 100)
   })
 }
 
