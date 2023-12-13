@@ -129,7 +129,10 @@
             v-else
             :key="i"
           >
-            <AppServerQuickConnect name="My OBSServer" />
+            <AppServerQuickConnect
+              :index="i"
+              name="My OBSServer"
+            />
           </template>
         </div>
       </div>

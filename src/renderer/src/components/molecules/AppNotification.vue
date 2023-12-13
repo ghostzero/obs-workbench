@@ -52,7 +52,6 @@
 <script setup lang="ts">
 import { onMounted, PropType } from 'vue'
 import { Notification } from '../../store/notification'
-import AppTitlebarDropdown from '../atoms/AppTitlebarDropdown.vue'
 
 const props = defineProps({
   notification: {

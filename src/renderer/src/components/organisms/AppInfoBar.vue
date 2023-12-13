@@ -89,14 +89,16 @@ import { storeToRefs } from 'pinia'
 
 const store = useAppStore()
 const userStore = useUserStore()
-const {user} = storeToRefs(userStore);
+const { user } = storeToRefs(userStore)
 
-const colors = (value: number, thresholds: number[], colors: string[]) => {
+type Color = 'green' | 'orange' | 'red' | 'gray' | undefined
+
+const colors = (value: number, thresholds: number[], colors: string[]): Color => {
   for (let i = 0; i < thresholds.length; i++) {
     if (value < thresholds[i]) {
-      return colors[i]
+      return colors[i] as Color
     }
   }
-  return colors[colors.length - 1]
+  return colors[colors.length - 1] as Color
 }
 </script>

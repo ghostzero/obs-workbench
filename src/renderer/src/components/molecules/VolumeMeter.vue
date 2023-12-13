@@ -17,7 +17,10 @@
           v-for="(inputLevels, inputLevelIndex) in props.volumeMeter.inputLevelsMul"
           :key="inputLevelIndex"
         >
-          <InputLevel :input-levels="inputLevels" />
+          <InputLevel
+            :index="inputLevelIndex"
+            :input-levels="inputLevels"
+          />
         </template>
         <div
           v-if="props.volumeMeter.inputLevelsMul.length > 0"

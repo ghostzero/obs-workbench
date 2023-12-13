@@ -1,4 +1,4 @@
-import { ComponentItemConfig, LayoutConfig, StackItemConfig } from 'golden-layout'
+import { LayoutConfig } from 'golden-layout'
 
 export const defaultLayoutConfig: LayoutConfig = {
   root: {
@@ -25,7 +25,7 @@ export const defaultLayoutConfig: LayoutConfig = {
                 componentState: {
                   refId: 0
                 }
-              } as ComponentItemConfig
+              }
             ],
             size: 50,
             sizeUnit: '%',
@@ -34,7 +34,7 @@ export const defaultLayoutConfig: LayoutConfig = {
             isClosable: true,
             maximised: false,
             activeItemIndex: 0
-          } as StackItemConfig,
+          },
           {
             type: 'stack',
             content: [
@@ -53,7 +53,7 @@ export const defaultLayoutConfig: LayoutConfig = {
                 componentState: {
                   refId: 1
                 }
-              } as ComponentItemConfig
+              }
             ],
             size: 50,
             sizeUnit: '%',
@@ -62,7 +62,7 @@ export const defaultLayoutConfig: LayoutConfig = {
             isClosable: true,
             maximised: false,
             activeItemIndex: 0
-          } as StackItemConfig
+          }
         ],
         size: 25.252525252525253,
         sizeUnit: '%',
@@ -91,7 +91,7 @@ export const defaultLayoutConfig: LayoutConfig = {
                 componentState: {
                   refId: 2
                 }
-              } as ComponentItemConfig
+              }
             ],
             size: 58.58585858585859,
             sizeUnit: '%',
@@ -100,7 +100,7 @@ export const defaultLayoutConfig: LayoutConfig = {
             isClosable: true,
             maximised: false,
             activeItemIndex: 0
-          } as StackItemConfig,
+          },
           {
             type: 'stack',
             content: [
@@ -119,7 +119,7 @@ export const defaultLayoutConfig: LayoutConfig = {
                 componentState: {
                   refId: 3
                 }
-              } as ComponentItemConfig
+              }
             ],
             size: 41.41414141414141,
             sizeUnit: '%',
@@ -128,7 +128,7 @@ export const defaultLayoutConfig: LayoutConfig = {
             isClosable: true,
             maximised: false,
             activeItemIndex: 0
-          } as StackItemConfig
+          }
         ],
         size: 74.74747474747475,
         sizeUnit: '%',
@@ -177,4 +177,4 @@ export const defaultLayoutConfig: LayoutConfig = {
     tabDropdown: 'additional tabs'
   },
   resolved: true
-}
+} as unknown as LayoutConfig

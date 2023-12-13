@@ -1,22 +1,22 @@
 <template>
   <AppPopup
-      v-if="store.name === 'confirm'"
+    v-if="store.name === 'confirm'"
   >
     <div class="my-3 text-center">
-      {{ store.data.message }}
+      {{ store.data?.message }}
     </div>
 
     <div class="flex gap-3">
       <AppButton
-          @click="store.close(true)"
-          class="w-full"
+        class="w-full"
+        @click="store.close(true)"
       >
         Confirm
       </AppButton>
       <AppButton
-          variant="outline"
-          @click="store.close(false)"
-          class="w-full"
+        variant="outline"
+        class="w-full"
+        @click="store.close(false)"
       >
         Cancel
       </AppButton>

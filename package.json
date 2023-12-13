@@ -1,5 +1,5 @@
 {
-  "name": "workbench",
+  "name": "obs-workbench",
   "productName": "OBS Workbench",
   "version": "1.0.0",
   "description": "An Electron & Vue.js based remote control for OBS",

@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { PropType } from 'vue'
 import MarkdownIt from 'markdown-it'
-import AppButton from './AppButton.vue'
+import AppButton, { ButtonVariant } from './AppButton.vue'
 
 const markdown = new MarkdownIt()
 
@@ -46,7 +46,7 @@ const props = defineProps({
   actions: {
     type: Array as PropType<{
       label: string
-      variant: string
+      variant: ButtonVariant
       onClick: () => void
     }[]>,
     default: () => []

@@ -1,6 +1,10 @@
+<!--suppress JSUnusedLocalSymbols -->
 <template>
   <div style="position: relative">
-    <div ref="GLRoot" style="position: absolute; width: 100%; height: 100%">
+    <div
+      ref="GLRoot"
+      style="position: absolute; width: 100%; height: 100%"
+    >
       <!-- Root dom for Golden-Layout manager -->
     </div>
     <div style="position: absolute; width: 100%; height: 100%">
@@ -16,6 +20,7 @@
 </template>
 
 <script setup lang="ts">
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { getCurrentInstance, nextTick, onMounted, PropType, readonly, ref } from 'vue'
 import GlComponent from './AppGoldenLayoutComponent.vue'
 import {
@@ -36,7 +41,7 @@ import {
  *******************/
 const props = defineProps({
   componentTypes: {
-    type: Object as PropType<{ [key: string]: any }>,
+    type: Object as PropType<{ [key: string]: unknown }>,
     required: true
   }
 })
@@ -53,7 +58,7 @@ const MapComponents = new Map<
   { refId: number; glc: typeof GlComponent }
 >()
 
-const AllComponents = ref(new Map<number, any>())
+const AllComponents = ref(new Map<number, unknown>())
 const UnusedIndexes: number[] = []
 let CurIndex = 0
 let GlBoundingClientRect: DOMRect
@@ -65,6 +70,7 @@ const instance = getCurrentInstance()
  *******************/
 /** @internal */
 const addComponent = (componentType: string, title: string) => {
+  console.log(title)
   // @vite-ignore
   const glc = props.componentTypes[componentType]
 
@@ -89,7 +95,7 @@ const addGLComponent = async (componentType: string, title: string) => {
 }
 
 const loadGLLayout = async (
-  layoutConfig: LayoutConfig | ResolvedLayoutConfig
+  layoutConfig: ResolvedLayoutConfig
 ) => {
   GLayout.clear()
   AllComponents.value.clear()
@@ -104,7 +110,7 @@ const loadGLLayout = async (
     | RowOrColumnItemConfig[]
     | StackItemConfig[]
     | ComponentItemConfig[]
-    )[] = [config.root.content as
+    )[] = [config.root?.content as
     | RowOrColumnItemConfig[]
     | StackItemConfig[]
     | ComponentItemConfig[]]
@@ -121,9 +127,12 @@ const loadGLLayout = async (
           itemConfig.componentType as string,
           itemConfig.title as string
         )
-        if (typeof itemConfig.componentState == 'object')
-          itemConfig.componentState['refId'] = index
-        else itemConfig.componentState = { refId: index }
+        if (typeof itemConfig.componentState == 'object') {
+          if (itemConfig.componentState)
+            itemConfig.componentState['refId'] = index
+        } else {
+          itemConfig.componentState = { refId: index }
+        }
       } else if (itemConfig.content.length > 0) {
         contents.push(
           itemConfig.content as
@@ -160,7 +169,7 @@ onMounted(() => {
 
   window.addEventListener('resize', onResize, { passive: true })
 
-  const handleBeforeVirtualRectingEvent = (count: number) => {
+  const handleBeforeVirtualRectingEvent = () => {
     GlBoundingClientRect = (
       GLRoot.value as HTMLElement
     ).getBoundingClientRect()
@@ -204,6 +213,8 @@ onMounted(() => {
 
   const handleContainerVirtualZIndexChangeRequiredEvent = (
     container: ComponentContainer,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     logicalZIndex: LogicalZIndex,
     defaultZIndex: string
   ): void => {

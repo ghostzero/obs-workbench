@@ -36,13 +36,16 @@
 <script setup lang="ts">
 import { PropType } from 'vue'
 
+export type ButtonVariant = 'solid' | 'solid-titlebar' | 'ghost' | 'ghost-titlebar' | 'outline'
+export type ButtonType = 'button' | 'submit' | 'reset'
+
 const props = defineProps({
   type: {
-    type: String as PropType<'button' | 'submit' | 'reset'>,
+    type: String as PropType<ButtonType>,
     default: 'button'
   },
   variant: {
-    type: String as PropType<'solid' | 'solid-titlebar' | 'ghost' | 'ghost-titlebar' | 'outline'>,
+    type: String as PropType<ButtonVariant>,
     default: 'solid'
   },
   loading: {
