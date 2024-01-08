@@ -1,5 +1,5 @@
 <template>
-  <div class="flex">
+  <div v-if="insideElectron" class="flex gap-1.5">
     <AppButton
       variant="ghost-titlebar"
       @click="minimizeWindow()"
@@ -25,6 +25,7 @@
 <script setup lang="ts">
 
 import AppButton from '../atoms/AppButton.vue'
+import { computed } from 'vue'
 
 const minimizeWindow = () => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -41,4 +42,10 @@ const closeWindow = () => {
   // @ts-ignore
   window.api.closeWindow()
 }
+
+const insideElectron = computed(() => {
+  // check user agent if it's inside electron
+  const userAgent = navigator.userAgent.toLowerCase()
+  return userAgent.indexOf(' electron/') > -1
+})
 </script>

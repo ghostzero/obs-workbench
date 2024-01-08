@@ -1,6 +1,9 @@
 <template>
   <App v-if="enabled" />
-  <div class="text-white/80 flex justify-center items-center h-full">
+  <div
+    v-else
+    class="text-white/80 flex justify-center items-center h-full"
+  >
     <div class="text-center flex flex-col gap-4">
       <div class="text-4xl font-bold">
         Workbench
@@ -34,26 +37,26 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from './store/user'
-import axios from 'axios'
+// import { useUserStore } from './store/user'
+// import axios from 'axios'
 import { onMounted, ref } from 'vue'
 import App from './App.vue'
 import AppButton from './components/atoms/AppButton.vue'
 
-const enabled = ref(false)
+const enabled = ref(true)
 const error = ref(null)
 
-const user = useUserStore()
+// const user = useUserStore()
 
 onMounted(() => {
-  axios.get('/sanctum/csrf-cookie')
-    .then(async () => {
-      await user.fetch()
-      enabled.value = true
-    })
-    .catch((e) => {
-      error.value = e
-    })
+  // axios.get('/sanctum/csrf-cookie')
+  //   .then(async () => {
+  //     await user.fetch()
+  //     enabled.value = true
+  //   })
+  //   .catch((e) => {
+  //     error.value = e
+  //   })
 })
 
 const closeWindow = () => {

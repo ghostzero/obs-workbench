@@ -1,7 +1,7 @@
 <template>
   <AppPopup
     close-position="top-right-outside"
-    max-width="4xl"
+    :max-width="insideOwn3d ? 'xl' : '4xl'"
   >
     <div class="flex gap-6">
       <form
@@ -65,8 +65,14 @@
           Connect
         </AppButton>
       </form>
-      <div class="border-r border-r-zinc-700" />
-      <div class="relative">
+      <div
+        v-if="!insideOwn3d"
+        class="border-r border-r-zinc-700"
+      />
+      <div
+        v-if="!insideOwn3d"
+        class="relative"
+      >
         <div
           v-if="!user || user.connections.length === 0"
           class="absolute inset-0 flex text-center items-center justify-center flex-col gap-3 z-10"
@@ -147,7 +153,7 @@
 
       <div class="text-white/50 text-xs text-center font-light mt-6">
         This project is not affiliated with OBS or any of their partners. All copyrights reserved to their respective
-        owners. I do not recommend using this in production environments as it is still in early development.
+        owners. We do not recommend using this in production environments as it is still in early development.
       </div>
     </template>
   </AppPopup>
@@ -157,7 +163,7 @@
 import AppPopup from '../molecules/AppPopup.vue'
 import AppInput from '../atoms/AppInput.vue'
 import AppButton from '../atoms/AppButton.vue'
-import { Ref, ref } from 'vue'
+import { Ref, ref, computed } from 'vue'
 import { Connection, useAppStore } from '../../store/app'
 import { usePopupStore } from '../../store/popup'
 import { useNotificationStore } from '../../store/notification'
@@ -171,6 +177,7 @@ const { close } = usePopupStore()
 const connecting = ref(false)
 
 const credentials: Ref<Connection> = ref({
+  tls: false,
   ip: 'localhost',
   port: '4455',
   password: ''
@@ -204,7 +211,11 @@ const quickConnect = (connection: Connection) => {
 }
 
 const openServerManager = () => {
-  const baseUrl = import.meta.env.RENDERER_VITE_API_URL as string
+  const baseUrl = import.meta.env.VITE_API_URL as string
   window.open(`${baseUrl}/connections`, '_blank')
 }
+
+const insideOwn3d = computed(() => {
+  return import.meta.env.VITE_INSIDE_OWN3D as string === 'true'
+})
 </script>

@@ -1,6 +1,5 @@
 {
   "name": "obs-workbench",
-  "productName": "OBS Workbench",
   "version": "1.0.0",
   "description": "An Electron & Vue.js based remote control for OBS",
   "main": "./out/main/index.js",
@@ -17,7 +16,10 @@
     "postinstall": "electron-builder install-app-deps",
     "build:win": "npm run build && electron-builder --win --config",
     "build:mac": "npm run build && electron-builder --mac --config",
-    "build:linux": "npm run build && electron-builder --linux --config"
+    "build:linux": "npm run build && electron-builder --linux --config",
+    "vite:dev": "vite",
+    "vite:build": "npm run typecheck:web && vite build",
+    "vite:preview": "vite preview"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^2.0.0",

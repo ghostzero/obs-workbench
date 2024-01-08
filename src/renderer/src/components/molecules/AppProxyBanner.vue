@@ -1,5 +1,8 @@
 <template>
-  <AppSection class="text-white/50">
+  <AppSection
+    v-if="!insideOwn3d"
+    class="text-white/50"
+  >
     <div class="flex gap-8 py-2">
       <div class="flex flex-col gap-1.5">
         <div class="text-white text-2xl">
@@ -40,6 +43,11 @@
 <script setup lang="ts">
 import AppSection from './AppSection.vue'
 import AppButton from '../atoms/AppButton.vue'
+import { computed } from 'vue'
 
 const emit = defineEmits(['login'])
+
+const insideOwn3d = computed(() => {
+  return import.meta.env.VITE_INSIDE_OWN3D as string === 'true'
+})
 </script>

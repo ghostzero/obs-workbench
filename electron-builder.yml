@@ -1,5 +1,5 @@
-appId: com.electron.app
-productName: obs-workbench
+appId: com.obs-workbench.app
+productName: OBS Workbench
 directories:
   buildResources: build
 files:

@@ -38,7 +38,7 @@ button, a {
 
 .lm_header .lm_tab {
   box-shadow: unset !important;
-  background: #18181b;
+  background: #181e23;
 }
 
 .lm_dropTargetIndicator {
@@ -54,7 +54,7 @@ button, a {
 }
 
 .lm_header .lm_tab.lm_active.lm_focused {
-  background-color: #18181b;
+  background-color: #181e23;
   color: #ffffff;
 }
 

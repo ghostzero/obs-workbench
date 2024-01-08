@@ -26,6 +26,7 @@ export interface InputVolumeMeter {
 }
 
 export interface Connection {
+  tls: boolean,
   ip: string,
   port: string,
   password: string
@@ -120,6 +121,7 @@ export const useAppStore = defineStore('obs', {
   state: (): State => {
     return {
       connection: {
+        tls: false,
         ip: 'localhost',
         port: '4444',
         password: ''
@@ -202,7 +204,8 @@ export const useAppStore = defineStore('obs', {
       await this.disconnect()
 
       this.connection = connection
-      const url = `ws://${connection.ip}:${connection.port}`
+      const protocol = connection.tls ? 'wss' : 'ws'
+      const url = `${protocol}://${connection.ip}:${connection.port}`
       this.hello = await websocket.connect(url, connection.password, {
         eventSubscriptions: EventSubscription.All | EventSubscription.InputVolumeMeters,
         rpcVersion: 1
