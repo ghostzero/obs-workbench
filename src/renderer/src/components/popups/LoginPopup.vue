@@ -64,7 +64,7 @@ const login = () => {
   loading.value = true
   try {
     userStore.login(credentials.value)
-    store.close()
+    store.openPopup('connect')
   } catch (error) {
     console.log(error)
   } finally {
