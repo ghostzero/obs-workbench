@@ -1,7 +1,8 @@
 import { app, BrowserWindow, ipcMain, shell } from 'electron'
-import { join } from 'path'
+import path, { join } from 'path'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { PluginLoader } from './plugin-loader'
 
 function createWindow(): void {
   // Create the browser window.
@@ -49,6 +50,10 @@ function createWindow(): void {
     mainWindow.close()
   })
 }
+
+// Very simple plugin system
+const pluginLoader = new PluginLoader(path.join(app.getPath('appData'), '.obs-workbench/plugins'));
+pluginLoader.loadPlugins().catch(console.error);
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
