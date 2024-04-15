@@ -27,7 +27,7 @@
       class="absolute inset-0 flex items-center justify-center"
     >
       <span class="w-4 h-4 text-white">
-        <i class="fal fa-spin fa-spinner-third"></i>
+        <i class="fal fa-spinner-third animate-spin" />
       </span>
     </span>
   </button>
