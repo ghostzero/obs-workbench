@@ -127,9 +127,9 @@ const updateScreenshots = () => {
   promises.push(
     obs.call('GetSourceScreenshot', {
       sourceName: store.currentProgramSceneName,
-      imageFormat: 'jpg',
+      imageFormat: 'webp',
       imageWidth: 640,
-      imageCompressionQuality: 50
+      imageCompressionQuality: 10
     }).then((programScreenshot) => {
       if (programImage.value)
         programImage.value.src = programScreenshot.imageData
@@ -141,9 +141,9 @@ const updateScreenshots = () => {
   promises.push(
     obs.call('GetSourceScreenshot', {
       sourceName: store.currentPreviewSceneName,
-      imageFormat: 'jpg',
+      imageFormat: 'webp',
       imageWidth: 640,
-      imageCompressionQuality: 50
+      imageCompressionQuality: 10
     }).then((previewScreenshot) => {
       if (previewImage.value)
         previewImage.value.src = previewScreenshot.imageData
