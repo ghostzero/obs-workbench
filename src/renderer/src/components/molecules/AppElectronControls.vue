@@ -23,29 +23,24 @@
 </template>
 
 <script setup lang="ts">
-
 import AppButton from '../atoms/AppButton.vue'
 import { computed } from 'vue'
 
 const minimizeWindow = () => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  window.api.minimizeWindow()
+  api.minimizeWindow()
 }
 const maximizeWindow = () => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  window.api.maximizeWindow()
+  api.maximizeWindow()
 }
 const closeWindow = () => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  window.api.closeWindow()
+  api.closeWindow()
 }
 
 const insideElectron = computed(() => {
-  // check user agent if it's inside electron
-  const userAgent = navigator.userAgent.toLowerCase()
-  return userAgent.indexOf(' electron/') > -1
+  // @ts-ignore
+  return typeof api !== 'undefined'
 })
 </script>
