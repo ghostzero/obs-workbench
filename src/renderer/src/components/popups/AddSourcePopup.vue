@@ -15,14 +15,14 @@
         <div class="border-b border-zinc-700" />
       </div>
       <AppButton
-          variant="outline"
-          @click="createSrtSource(app.currentSceneName, inputName, 'caller').then(() => popup.close())"
+        variant="outline"
+        @click="createSrtSource(app.currentSceneName, inputName, 'caller').then(() => popup.close())"
       >
         SRT Caller Source
       </AppButton>
       <AppButton
-          variant="outline"
-          @click="createSrtSource(app.currentSceneName, inputName, 'listener').then(() => popup.close())"
+        variant="outline"
+        @click="createSrtSource(app.currentSceneName, inputName, 'listener').then(() => popup.close())"
       >
         SRT Listener Source
       </AppButton>
