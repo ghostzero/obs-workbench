@@ -29,7 +29,6 @@ const props = defineProps<{
 
 const levelA = ref(0)
 const levelB = ref(0)
-const targetLevelA = ref(0)
 const targetLevelB = ref(0)
 const lerpSpeed = 0.1
 
@@ -39,13 +38,13 @@ const lerp = (start: number, end: number, t: number) => {
 
 onMounted(() => {
   const interval = setInterval(() => {
-    levelA.value = lerp(levelA.value, targetLevelA.value, lerpSpeed)
     levelB.value = lerp(levelB.value, targetLevelB.value, lerpSpeed)
   }, 1000 / 60)
+  onUnmounted(() => clearInterval(interval))
+})
 
-  onUnmounted(() => {
-    clearInterval(interval)
-  })
+watch(() => props.inputLevels, () => {
+  targetLevelB.value = (60 - db(props.inputLevels[1])) / 60 * 100
 })
 
 const db = (mul: number) => {
