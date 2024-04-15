@@ -173,7 +173,7 @@ const menuItems: Ref<MenuItem[]> = computed(() => {
 const calculateViaGradient = computed(() => {
   const { r, g, b } = colorPalette[activeConnection.value.letter?.color ?? 'red']
   return {
-    'background': `linear-gradient(90deg, #181e23 0px, rgba(${r}, ${g}, ${b}, .4) 95px, #181e23 300px)`,
+    'background': `linear-gradient(90deg, #18181B 0px, rgba(${r}, ${g}, ${b}, .4) 95px, #18181B 300px)`,
     '-webkit-app-region': 'drag'
   }
 })
