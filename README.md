@@ -29,10 +29,12 @@ I still have some few features to implement before I can call this a beta versio
 - [x] Switching between Scene Collections
 - [x] Switching between Profiles
 - [x] Accounts System for additional features
+- [ ] Adding and editing sources and scenes
 - [ ] SRT Ingest and Source for IRL streaming
 - [ ] Build-in Ingress Server for localhost
 
 ### Planned Features
 
+- [ ] Rentable OBS Studio instances
 - [ ] Support for Simple Mode
 - [ ] Support for Multiview
