@@ -19,6 +19,7 @@
           'right-[-20px] top-[-50px]': props.closePosition === 'top-right-outside',
         }]"
       >
+        <slot name="cta" />
         <button
           v-if="props.closeable"
           type="button"

@@ -3,6 +3,22 @@
     close-position="top-right-outside"
     :max-width="insideOwn3d ? 'xl' : '4xl'"
   >
+    <template #cta>
+      <div class="flex absolute bottom-1 right-12 gap-4">
+        <button
+          class="text-white/30 hover:text-zinc-300"
+          @click.prevent="userStore.sync()"
+        >
+          <i class="fal fa-refresh text-lg" />
+        </button>
+        <button
+          class="text-white/30 hover:text-zinc-300"
+          @click.prevent="userStore.logout()"
+        >
+          <i class="fal fa-lock text-lg" />
+        </button>
+      </div>
+    </template>
     <div class="flex gap-6">
       <form
         class="space-y-6 flex-grow"
@@ -74,7 +90,7 @@
         class="relative"
       >
         <div
-          v-if="!user || user.connections.length === 0"
+          v-if="!user || mergedConnections.length === 0"
           class="absolute inset-0 flex text-center items-center justify-center flex-col gap-3 z-10"
         >
           <template v-if="!user">
@@ -118,13 +134,15 @@
           }]"
         >
           <template
-            v-if="user && user.connections.length"
+            v-if="user && mergedConnections.length"
           >
             <template
-              v-for="connection in user?.connections"
-              :key="connection.id"
+              v-for="connection in mergedConnections"
+              :key="connection.name"
             >
               <AppServerQuickConnect
+                :id="connection.id"
+                :ready="connection?.ready ?? true"
                 :name="connection.name"
                 @connect="quickConnect(connection)"
               />
@@ -137,7 +155,7 @@
           >
             <AppServerQuickConnect
               :index="i"
-              name="My OBSServer"
+              name="Not connected"
             />
           </template>
         </div>
@@ -145,9 +163,11 @@
     </div>
 
     <template #footer>
+      <AppCloudServerBrowser class="mt-8" />
+
       <AppProxyBanner
         v-if="!userStore.user"
-        class="mt-12"
+        class="mt-8"
         @login="openPopup('login')"
       />
 
@@ -171,6 +191,7 @@ import AppServerQuickConnect from '../atoms/AppServerQuickConnect.vue'
 import AppProxyBanner from '../molecules/AppProxyBanner.vue'
 import { useUserStore } from '../../store/user'
 import { storeToRefs } from 'pinia'
+import AppCloudServerBrowser from '../molecules/AppCloudServerBrowser.vue'
 
 const appStore = useAppStore()
 const { close } = usePopupStore()
@@ -187,6 +208,10 @@ const { error } = useNotificationStore()
 const { openPopup } = usePopupStore()
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
+
+const sync = async () => {
+  await userStore.sync()
+}
 
 const connect = async () => {
   connecting.value = true
@@ -217,5 +242,16 @@ const openServerManager = () => {
 
 const insideOwn3d = computed(() => {
   return import.meta.env.VITE_INSIDE_OWN3D as string === 'true'
+})
+
+const mergedConnections = computed((): Connection[] => {
+  if (!user.value || !user.value.connections) {
+    return []
+  }
+
+  return [
+    ...user.value.connections as Connection[],
+    ...user.value.cloud_servers as Connection[]
+  ]
 })
 </script>

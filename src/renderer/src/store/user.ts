@@ -8,6 +8,10 @@ interface StoredConnection extends Connection {
   color: string
 }
 
+interface CloudServer extends Connection {
+  ready: boolean
+}
+
 export interface State {
   user: {
     id: number
@@ -18,6 +22,7 @@ export interface State {
     created_at: string
     updated_at: string
     connections: StoredConnection[]
+    cloud_servers: CloudServer[]
   } | null
 }
 
@@ -28,6 +33,19 @@ export const useUserStore = defineStore('user', {
     }
   },
   actions: {
+    async sync(): Promise<void> {
+      const response = await axios.post('electron/sync')
+      this.user = response.data
+    },
+    async waitForCloudServer(id: number): Promise<void> {
+      const cloudServer = this.user?.cloud_servers.find(server => server.id === id)
+      if (!cloudServer) return
+
+      while (!cloudServer.ready) {
+        await new Promise(resolve => setTimeout(resolve, 10000))
+        await this.sync()
+      }
+    },
     async login(credentials: { email: string; password: string }): Promise<void> {
       const response = await axios.post('electron/login', credentials)
       this.user = response.data
