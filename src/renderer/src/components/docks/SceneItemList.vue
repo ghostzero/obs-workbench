@@ -126,7 +126,7 @@ const items = computed(() => {
 const toggleEnabled = async (item: any) => {
   item.sceneItemEnabled = !item.sceneItemEnabled
   await obs.call('SetSceneItemEnabled', {
-    sceneName: store.currentPreviewSceneName,
+    sceneName: store.currentSceneName,
     sceneItemId: item.sceneItemId,
     sceneItemEnabled: item.sceneItemEnabled
   })
@@ -134,7 +134,7 @@ const toggleEnabled = async (item: any) => {
 const toggleLocked = async (item: any) => {
   item.sceneItemLocked = !item.sceneItemLocked
   await obs.call('SetSceneItemLocked', {
-    sceneName: store.currentPreviewSceneName,
+    sceneName: store.currentSceneName,
     sceneItemId: item.sceneItemId,
     sceneItemLocked: item.sceneItemLocked
   })

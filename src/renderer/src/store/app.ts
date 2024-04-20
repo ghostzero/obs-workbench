@@ -220,10 +220,6 @@ export const useAppStore = defineStore('obs', {
       console.log('version', this.version)
       console.log('outputs', outputs)
 
-      // await websocket.call('SetStudioModeEnabled', {
-      //   studioModeEnabled: this.studioMode,
-      // })
-
       await this.fetchEntireState()
 
       this.inputs.forEach((input) => {
@@ -363,6 +359,7 @@ export const useAppStore = defineStore('obs', {
           this.currentPreviewSceneName = currentPreviewSceneName
         } else {
           this.currentPreviewSceneName = null
+          await this.updateSceneItems()
         }
       })
 
