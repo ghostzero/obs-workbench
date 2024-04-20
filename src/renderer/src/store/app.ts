@@ -1,8 +1,8 @@
-import { defineStore } from 'pinia'
-import { EventSubscription, OBSEventTypes } from 'obs-websocket-js'
-import { useObs } from '../composables/useObs'
+import {defineStore} from 'pinia'
+import {EventSubscription, OBSEventTypes} from 'obs-websocket-js'
+import {useObs} from '../composables/useObs'
 
-const { obs: websocket } = useObs()
+const {obs: websocket} = useObs()
 const unsupportedAudioInputs: string[] = [
   'text_ft2_source_v2', 'image_source', 'monitor_capture'
 ]
@@ -35,7 +35,7 @@ export interface Connection {
 export interface State {
   connection: Connection,
   connected: boolean,
-  currentPreviewSceneName: string,
+  currentPreviewSceneName: string | null,
   currentProgramSceneName: string,
   scenes: {
     sceneIndex: number,
@@ -197,7 +197,10 @@ export const useAppStore = defineStore('obs', {
   getters: {
     currentSceneName(): string {
       return this.currentPreviewSceneName || this.currentProgramSceneName
-    }
+    },
+    studioMode(): boolean {
+      return !!this.currentPreviewSceneName;
+    },
   },
   actions: {
     async connect(connection: Connection): Promise<void> {
@@ -217,9 +220,9 @@ export const useAppStore = defineStore('obs', {
       console.log('version', this.version)
       console.log('outputs', outputs)
 
-      await websocket.call('SetStudioModeEnabled', {
-        studioModeEnabled: true
-      })
+      // await websocket.call('SetStudioModeEnabled', {
+      //   studioModeEnabled: this.studioMode,
+      // })
 
       await this.fetchEntireState()
 
@@ -229,7 +232,7 @@ export const useAppStore = defineStore('obs', {
           return
         }
 
-        websocket.call('GetInputVolume', { inputName: input.inputName })
+        websocket.call('GetInputVolume', {inputName: input.inputName})
           .then((response) => {
             this.inputVolumes[input.inputName] = {
               inputVolumeDb: response.inputVolumeDb,
@@ -240,7 +243,7 @@ export const useAppStore = defineStore('obs', {
           .catch((e) => {
             console.error(e, input)
           })
-        websocket.call('GetInputMute', { inputName: input.inputName })
+        websocket.call('GetInputMute', {inputName: input.inputName})
           .then((response) => {
             this.inputVolumes[input.inputName] = {
               inputVolumeDb: this.inputVolumes[input.inputName]?.inputVolumeDb ?? 0,
@@ -253,16 +256,17 @@ export const useAppStore = defineStore('obs', {
           })
       })
 
-      websocket.on('CurrentProgramSceneChanged', (e: OBSEventTypes['CurrentProgramSceneChanged']) => {
+      websocket.on('CurrentProgramSceneChanged', async (e: OBSEventTypes['CurrentProgramSceneChanged']) => {
         this.currentProgramSceneName = e.sceneName
+        if (!this.studioMode) {
+          await this.updateSceneItems()
+        }
       })
-      websocket.on('CurrentPreviewSceneChanged', (e: OBSEventTypes['CurrentPreviewSceneChanged']) => {
+      websocket.on('CurrentPreviewSceneChanged', async (e: OBSEventTypes['CurrentPreviewSceneChanged']) => {
         this.currentPreviewSceneName = e.sceneName
-        websocket.call('GetSceneItemList', {
-          sceneName: e.sceneName
-        }).then((response) => {
-          this.sceneItems = response.sceneItems as unknown as SceneItem[]
-        })
+        if (this.studioMode) {
+          await this.updateSceneItems()
+        }
       })
       websocket.on('SceneItemListReindexed', (e: OBSEventTypes['SceneItemListReindexed']) => {
         if (this.currentPreviewSceneName === e.sceneName) {
@@ -353,6 +357,15 @@ export const useAppStore = defineStore('obs', {
         await this.fetchEntireState()
       })
 
+      websocket.on('StudioModeStateChanged', async (e: OBSEventTypes['StudioModeStateChanged']) => {
+        if (e.studioModeEnabled) {
+          const {currentPreviewSceneName} = await websocket.call('GetCurrentPreviewScene')
+          this.currentPreviewSceneName = currentPreviewSceneName
+        } else {
+          this.currentPreviewSceneName = null
+        }
+      })
+
       const list = ['SceneItemCreated', 'SceneItemRemoved', 'SceneItemListReindexed']
       list.forEach((event: any) => websocket.on(event, () => this.updateSceneItems()))
 
@@ -371,10 +384,6 @@ export const useAppStore = defineStore('obs', {
     },
     async fetchEntireState() {
       const response = await websocket.call('GetSceneList')
-
-      if (!response.currentPreviewSceneName) {
-        throw new Error('Only Studio Mode is supported, yet.')
-      }
 
       this.currentPreviewSceneName = response.currentPreviewSceneName
       this.currentProgramSceneName = response.currentProgramSceneName
@@ -405,7 +414,7 @@ export const useAppStore = defineStore('obs', {
     },
     async updateSceneItems() {
       this.sceneItems = (await websocket.call('GetSceneItemList', {
-        sceneName: this.currentPreviewSceneName
+        sceneName: this.currentSceneName,
       })).sceneItems as unknown as State['sceneItems']
     },
     setInputVolume(inputName: string, inputVolumeDb: number) {
@@ -414,6 +423,22 @@ export const useAppStore = defineStore('obs', {
         inputName,
         inputVolumeDb
       })
+    },
+    async toggleStudioMode() {
+      await websocket.call('SetStudioModeEnabled', {
+        studioModeEnabled: !this.studioMode,
+      })
+    },
+    async updatePreviewScene(sceneName: string) {
+      if (this.studioMode) {
+        await websocket.call('SetCurrentPreviewScene', {
+          sceneName: sceneName,
+        })
+      } else {
+        await websocket.call('SetCurrentProgramScene', {
+          sceneName: sceneName,
+        })
+      }
     }
   }
 })

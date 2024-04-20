@@ -96,55 +96,68 @@ const {user} = storeToRefs(userStore);
 
 const showSecondLevelMenu = ref(false)
 
-const secondLevelMenus = ref([
-  {
-    label: 'Account',
-    menuItems: [
-      {
-        id: 0,
-        label: 'Sign in',
-        icon: { name: 'sign-in' },
-        click: () => openPopup(LoginPopup)
-      },
-      {
-        id: 1,
-        label: 'Sign out',
-        icon: { name: 'sign-out' },
-        click: () => userStore.logout()
-      }
-    ]
-  },
-  {
-    label: 'Help',
-    menuItems: [
-      {
-        id: 0,
-        label: 'About',
-        icon: { name: 'info-circle' }
-      },
-      {
-        id: 1,
-        label: 'Check for updates',
-        icon: { name: 'download' }
-      },
-      {
-        id: 2,
-        label: 'Report a bug',
-        icon: { name: 'bug' }
-      },
-      {
-        id: 3,
-        label: 'Join the Discord',
-        icon: { name: 'discord' }
-      },
-      {
-        id: 4,
-        label: 'Open the Wiki',
-        icon: { name: 'book' }
-      }
-    ]
-  }
-])
+const secondLevelMenus = computed(() => {
+  return [
+    {
+      label: 'Account',
+      menuItems: [
+        {
+          id: 0,
+          label: 'Sign in',
+          icon: { name: 'sign-in' },
+          click: () => openPopup(LoginPopup)
+        },
+        {
+          id: 1,
+          label: 'Sign out',
+          icon: { name: 'sign-out' },
+          click: () => userStore.logout()
+        }
+      ]
+    },
+    {
+      label: 'View',
+      menuItems: [
+        {
+          id: 0,
+          label: 'Studio Mode',
+          icon: store.studioMode ? { name: 'check' } : undefined,
+          click: () => store.toggleStudioMode()
+        },
+      ]
+    },
+    {
+      label: 'Help',
+      menuItems: [
+        {
+          id: 0,
+          label: 'About',
+          icon: { name: 'info-circle' }
+        },
+        {
+          id: 1,
+          label: 'Check for updates',
+          icon: { name: 'download' }
+        },
+        {
+          id: 2,
+          label: 'Report a bug',
+          icon: { name: 'bug' }
+        },
+        {
+          id: 3,
+          label: 'Join the Discord',
+          icon: { name: 'discord' }
+        },
+        {
+          id: 4,
+          label: 'Open the Wiki',
+          icon: { name: 'book' }
+        }
+      ]
+    }
+  ]
+})
 
 const menuItems: Ref<MenuItem[]> = computed(() => {
   const items: MenuItem[] = [

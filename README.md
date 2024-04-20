@@ -21,7 +21,7 @@ to use. I want to make it as reliable as possible to use.
 - Switch scenes between preview and program
 - Toggle visibility and lock of sources
 
-## Work in Progress
+## Work in Progress (For Initial Beta Release)
 
 I still have some few features to implement before I can call this a beta version. I will update this list as I go.
 
@@ -29,12 +29,12 @@ I still have some few features to implement before I can call this a beta versio
 - [x] Switching between Scene Collections
 - [x] Switching between Profiles
 - [x] Accounts System for additional features
+- [x] Support for Simple Mode
 - [ ] Adding and editing sources and scenes
-- [ ] SRT Ingest and Source for IRL streaming
+
+### Planned Features (Coming Very Soon)
+
+- [ ] SRT Ingest and Source for IRL streaming (WIP)
+- [ ] Rentable OBS Studio instances (WIP)
 - [ ] Build-in Ingress Server for localhost
-
-### Planned Features
-
-- [ ] Rentable OBS Studio instances
-- [ ] Support for Simple Mode
 - [ ] Support for Multiview

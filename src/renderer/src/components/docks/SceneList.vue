@@ -19,10 +19,10 @@
             <a
               href="#"
               :class="['group flex justify-between gap-x-3 rounded-md p-2 px-3 text-sm leading-6 font-semibold', {
-                'bg-primary-500 text-white': store.currentPreviewSceneName === item.sceneName,
-                'text-white hover:bg-zinc-700': store.currentPreviewSceneName !== item.sceneName,
+                'bg-primary-500 text-white': store.currentSceneName === item.sceneName,
+                'text-white hover:bg-zinc-700': store.currentSceneName !== item.sceneName,
               }]"
-              @click.prevent="updatePreviewScene(item.sceneName)"
+              @click.prevent="store.updatePreviewScene(item.sceneName)"
             >
               <div>
                 {{ item.sceneName }}
@@ -31,8 +31,8 @@
                 <i
                   v-if="store.currentProgramSceneName === item.sceneName"
                   :class="['fas fa-signal-stream', {
-                    'text-primary-500': store.currentPreviewSceneName !== item.sceneName,
-                    'text-white': store.currentPreviewSceneName === item.sceneName,
+                    'text-primary-500': store.currentSceneName !== item.sceneName,
+                    'text-white': store.currentSceneName === item.sceneName,
                   }]"
                 />
                 <button
@@ -75,7 +75,6 @@
 
 <script setup lang="ts">
 import { useAppStore } from '../../store/app'
-import { useObs } from '../../composables/useObs'
 import { computed } from 'vue'
 import { useSceneStore } from '../../store/scene'
 import AppEmptyState from '../atoms/AppEmptyState.vue'
@@ -87,7 +86,6 @@ import AddScenePopup from "../popups/AddScenePopup.vue";
 const {openPopup} = usePopupStore()
 const store = useAppStore()
 const scene = useSceneStore()
-const {obs} = useObs()
 
 const actions = [
   {
@@ -101,10 +99,4 @@ const items = computed(() => {
   return store.scenes.slice() // sort by sceneItemIndex (z-index)
       .sort((a, b) => b.sceneIndex - a.sceneIndex)
 })
-
-const updatePreviewScene = async (sceneName: string) => {
-  await obs.call('SetCurrentPreviewScene', {
-    sceneName: sceneName,
-  })
-}
 </script>
