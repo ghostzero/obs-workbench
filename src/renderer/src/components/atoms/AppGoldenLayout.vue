@@ -70,7 +70,6 @@ const instance = getCurrentInstance()
  *******************/
 /** @internal */
 const addComponent = (componentType: string, title: string) => {
-  console.log(title)
   // @vite-ignore
   const glc = props.componentTypes[componentType]
 

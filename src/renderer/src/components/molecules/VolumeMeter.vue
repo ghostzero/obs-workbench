@@ -112,7 +112,7 @@ const updateInputLevel = (event: Event) => {
 }
 
 .volume-vertical {
-  -webkit-appearance: slider-vertical;
+  writing-mode: vertical-lr; direction: rtl;
   width: 3px;
 }
 </style>
