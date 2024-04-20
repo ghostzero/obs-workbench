@@ -40,6 +40,8 @@
           <AppButton
             variant="outline"
             class="px-8"
+            :loading="loading"
+            :disabled="formInputs.length === 0"
             @click="resetSceneItemProperties"
           >
             Defaults
@@ -57,6 +59,7 @@
             type="submit"
             variant="solid"
             class="px-8"
+            :disabled="formInputs.length === 0"
             @click="saveSceneItemProperties"
           >
             OK

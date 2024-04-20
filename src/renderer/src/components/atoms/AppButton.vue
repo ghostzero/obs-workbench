@@ -13,8 +13,9 @@
       // own3d uses ff9602 as text, border, and ff9602/10 as background
       'bg-[#ff9602]/30 text-[#ff9602] hover:bg-[#ff9602] hover:text-white ring-1 ring-inset ring-[#ff9602]/40 focus:ring-2 focus:ring-inset focus:ring-[#ff9602]': props.variant === 'own3d',
       'cursor-not-allowed': props.loading,
+      'cursor-not-allowed opacity-50': props.disabled,
     }]"
-    :disabled="props.loading"
+    :disabled="props.loading || props.disabled"
   >
     <span
       :class="{
@@ -52,6 +53,10 @@ const props = defineProps({
     default: 'solid'
   },
   loading: {
+    type: Boolean,
+    default: false
+  },
+  disabled: {
     type: Boolean,
     default: false
   },
