@@ -3,16 +3,16 @@
     class="min-h-full select-none"
     @contextmenu.prevent
   >
-    <AppPopups />
-    <AppNotifications />
-    <AppTitlebar />
+    <AppPopups/>
+    <AppNotifications/>
+    <AppTitlebar/>
 
     <template v-if="store.connected">
       <main class="flex flex-col gap-4 px-8 py-4 h-[calc(100vh-52px)]">
-        <AppInfoBar />
+        <AppInfoBar/>
 
         <div class="flex-auto">
-          <AppGoldenLayout />
+          <AppGoldenLayout/>
         </div>
 
         <footer>
@@ -30,7 +30,14 @@
             <div class="flex gap-2 text-center">
 
               <div class="flex gap-1.5 text-center text-sm text-gray-500 sm:text-left">
-                <div>Workbench Version: {{ gitHash }}</div>
+                <div>
+                  {{ store.bandwidth.requestsCount }} requests /
+                  {{ transferred }} MB / {{ bandwidth }} Kbit/s
+                </div>
+                <div>|</div>
+                <div>
+                  Workbench Version: {{ gitHash }}
+                </div>
               </div>
             </div>
           </div>
@@ -63,13 +70,23 @@ import AppPopups from './components/organisms/AppPopups.vue'
 import AppNotifications from './components/organisms/AppNotifications.vue'
 import AppTitlebar from './components/organisms/AppTitlebar.vue'
 import AppGoldenLayout from './components/molecules/AppGoldenLayout.vue'
-import { useAppStore } from './store/app'
+import {useAppStore} from './store/app'
 import AppEmptyState from './components/atoms/AppEmptyState.vue'
-import { usePopupStore } from './store/popup'
+import {usePopupStore} from './store/popup'
 import ConnectPopup from "./components/popups/ConnectPopup.vue";
+import {computed} from "vue";
 
 const store = useAppStore()
-const { openPopup } = usePopupStore()
+const {openPopup} = usePopupStore()
+
+const transferred = computed(() => {
+  return (store.bandwidth.bytesTransferred / 1024 / 1024).toFixed(2)
+})
+
+const bandwidth = computed(() => {
+  return ((store.bandwidth.bandwidth / 1024) * 8).toFixed(2)
+})
+
 
 const gitHash = import.meta.env.VITE_GIT_COMMIT_HASH as string
 </script>

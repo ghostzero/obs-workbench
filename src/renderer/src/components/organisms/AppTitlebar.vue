@@ -13,7 +13,7 @@
           class="flex justify-center items-center hover:bg-white/10 w-8 h-8 rounded"
           @click="showSecondLevelMenu = !showSecondLevelMenu"
         >
-          <i class="fas fa-fw fa-bars" />
+          <i class="fas fa-fw fa-bars"/>
         </button>
 
         <template
@@ -64,33 +64,33 @@
       </OnClickOutside>
 
       <div class="flex items-center gap-6 -mr-6">
-        <AppControls v-if="store.connected" />
-        <AppElectronControls />
+        <AppControls v-if="store.connected"/>
+        <AppElectronControls/>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { OnClickOutside } from '@vueuse/components'
-import AppTitlebarDropdown, { MenuItem } from '../atoms/AppTitlebarDropdown.vue'
-import { computed, Ref, ref } from 'vue'
-import { Connection, useAppStore } from '../../store/app'
-import { useObs } from '../../composables/useObs'
-import { useNotificationStore } from '../../store/notification'
+import {OnClickOutside} from '@vueuse/components'
+import AppTitlebarDropdown, {MenuItem} from '../atoms/AppTitlebarDropdown.vue'
+import {computed, Ref, ref} from 'vue'
+import {Connection, useAppStore} from '../../store/app'
+import {useObs} from '../../composables/useObs'
+import {useNotificationStore} from '../../store/notification'
 import AppControls from '../atoms/AppControls.vue'
-import { usePopupStore } from '../../store/popup'
-import { colorPalette } from '../../color-palette'
+import {usePopupStore} from '../../store/popup'
+import {colorPalette} from '../../color-palette'
 import AppElectronControls from '../molecules/AppElectronControls.vue'
-import { useUserStore } from '../../store/user'
-import { storeToRefs } from 'pinia'
+import {useUserStore} from '../../store/user'
+import {storeToRefs} from 'pinia'
 import LoginPopup from "../popups/LoginPopup.vue";
 import ConnectPopup from "../popups/ConnectPopup.vue";
 
 const store = useAppStore()
-const { error } = useNotificationStore()
-const { openPopup } = usePopupStore()
-const { obs } = useObs()
+const {error} = useNotificationStore()
+const {openPopup} = usePopupStore()
+const {obs} = useObs()
 const userStore = useUserStore()
 const {user} = storeToRefs(userStore);
 
@@ -104,13 +104,13 @@ const secondLevelMenus = computed(() => {
         {
           id: 0,
           label: 'Sign in',
-          icon: { name: 'sign-in' },
+          icon: {name: 'sign-in'},
           click: () => openPopup(LoginPopup)
         },
         {
           id: 1,
           label: 'Sign out',
-          icon: { name: 'sign-out' },
+          icon: {name: 'sign-out'},
           click: () => userStore.logout()
         }
       ]
@@ -121,9 +121,27 @@ const secondLevelMenus = computed(() => {
         {
           id: 0,
           label: 'Studio Mode',
-          icon: store.studioMode ? { name: 'check' } : undefined,
+          icon: store.studioMode ? {name: 'check'} : undefined,
           click: () => store.toggleStudioMode()
         },
+        {
+          id: 10,
+          label: 'Image Quality: Low Bandwidth',
+          icon: store.screenshot.imageCompressionQuality === 10 ? {name: 'check'} : {name: 'empty'},
+          click: () => store.setImageCompressionQuality(10)
+        },
+        {
+          id: 40,
+          label: 'Image Quality: Medium Bandwidth',
+          icon: store.screenshot.imageCompressionQuality === 40 ? {name: 'check'} : {name: 'empty'},
+          click: () => store.setImageCompressionQuality(40)
+        },
+        {
+          id: 80,
+          label: 'Image Quality: High Bandwidth',
+          icon: store.screenshot.imageCompressionQuality === 80 ? {name: 'check'} : {name: 'empty'},
+          click: () => store.setImageCompressionQuality(80)
+        }
       ]
     },
     {
@@ -132,27 +150,27 @@ const secondLevelMenus = computed(() => {
         {
           id: 0,
           label: 'About',
-          icon: { name: 'info-circle' }
+          icon: {name: 'info-circle'}
         },
         {
           id: 1,
           label: 'Check for updates',
-          icon: { name: 'download' }
+          icon: {name: 'download'}
         },
         {
           id: 2,
           label: 'Report a bug',
-          icon: { name: 'bug' }
+          icon: {name: 'bug'}
         },
         {
           id: 3,
           label: 'Join the Discord',
-          icon: { name: 'discord' }
+          icon: {name: 'discord'}
         },
         {
           id: 4,
           label: 'Open the Wiki',
-          icon: { name: 'book' }
+          icon: {name: 'book'}
         }
       ]
     }
@@ -164,7 +182,7 @@ const menuItems: Ref<MenuItem[]> = computed(() => {
     {
       id: 0,
       label: 'Connect to a new server',
-      icon: { name: 'plus' }
+      icon: {name: 'plus'}
     }
   ];
 
@@ -173,7 +191,7 @@ const menuItems: Ref<MenuItem[]> = computed(() => {
       id: connection.id,
       label: connection.name,
       subtitle: `ws://${connection.ip}:${connection.port}`,
-      letter: { text: connection.name[0], color: connection.color },
+      letter: {text: connection.name[0], color: connection.color},
       data: {
         ip: connection.ip,
         port: connection.port,
@@ -186,7 +204,7 @@ const menuItems: Ref<MenuItem[]> = computed(() => {
 })
 
 const calculateViaGradient = computed(() => {
-  const { r, g, b } = colorPalette[activeConnection.value.letter?.color ?? 'red']
+  const {r, g, b} = colorPalette[activeConnection.value.letter?.color ?? 'red']
   return {
     'background': `linear-gradient(90deg, #18181B 0px, rgba(${r}, ${g}, ${b}, .4) 95px, #18181B 300px)`,
     '-webkit-app-region': 'drag'
@@ -197,7 +215,7 @@ const profileMenuItems = computed(() => {
   return store.profileList.profiles.map((profile) => ({
     id: profile,
     label: profile,
-    icon: { name: 'user' }
+    icon: {name: 'user'}
   }))
 })
 
@@ -205,7 +223,7 @@ const sceneCollectionMenuItems = computed(() => {
   return store.sceneCollectionList.sceneCollections.map((sceneCollection) => ({
     id: sceneCollection,
     label: sceneCollection,
-    icon: { name: 'rectangle-history' }
+    icon: {name: 'rectangle-history'}
   }))
 })
 
@@ -219,7 +237,7 @@ const activeConnection = computed(() => {
   }) ?? {
     label: store.connection.ip,
     subtitle: `ws://${store.connection.ip}:${store.connection.port}`,
-    letter: { text: store.connection.ip[0], color: 'rose' },
+    letter: {text: store.connection.ip[0], color: 'rose'},
   }
 })
 

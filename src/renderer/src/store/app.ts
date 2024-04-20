@@ -112,6 +112,17 @@ export interface State {
     outputSkippedFrames: number,
     outputTotalFrames: number,
   },
+  screenshot: {
+    imageWidth: number,
+    imageCompressionQuality: number,
+  },
+  bandwidth: {
+    bytesTransferred: number,
+    bytesTransferredPrevious: number,
+    requestsCount: number,
+    requestsCountPrevious: number,
+    bandwidth: number,
+  },
   intervals: {
     [key: string]: NodeJS.Timeout
   }
@@ -190,6 +201,17 @@ export const useAppStore = defineStore('obs', {
         outputCongestion: 0,
         outputSkippedFrames: 0,
         outputTotalFrames: 0
+      },
+      screenshot: {
+        imageWidth: 640,
+        imageCompressionQuality: 10,
+      },
+      bandwidth: {
+        bytesTransferred: 0,
+        bytesTransferredPrevious: 0,
+        requestsCount: 0,
+        requestsCountPrevious: 0,
+        bandwidth: 0,
       },
       intervals: {}
     }
@@ -407,6 +429,22 @@ export const useAppStore = defineStore('obs', {
         this.stats = await websocket.call('GetStats')
       }, 3000)
 
+      await this.registerInterval('bandwidth', async () => {
+        // Calculate bandwidth in the last second
+        const bytesTransferredLastSecond = this.bandwidth.bytesTransferred - this.bandwidth.bytesTransferredPrevious;
+        const requestsCountLastSecond = this.bandwidth.requestsCount - this.bandwidth.requestsCountPrevious;
+
+        if (requestsCountLastSecond > 0) {
+          this.bandwidth.bandwidth = bytesTransferredLastSecond / requestsCountLastSecond; // Update bandwidth value
+        } else {
+          this.bandwidth.bandwidth = 0; // No requests in the last second, set bandwidth to 0
+        }
+
+        // Update previous values for next calculation
+        this.bandwidth.bytesTransferredPrevious = this.bandwidth.bytesTransferred;
+        this.bandwidth.requestsCountPrevious = this.bandwidth.requestsCount;
+      }, 1000)
+
       console.log('inputs', this.inputs)
     },
     async updateSceneItems() {
@@ -436,6 +474,16 @@ export const useAppStore = defineStore('obs', {
           sceneName: sceneName,
         })
       }
-    }
+    },
+    setImageCompressionQuality(imageCompressionQuality: number) {
+      this.screenshot.imageCompressionQuality = imageCompressionQuality
+    },
+    updateBandwidth(bytesTransferred: number) {
+      // log in kb
+      console.log('bytesTransferred', bytesTransferred / 1024)
+      this.bandwidth.bytesTransferred += bytesTransferred;
+      this.bandwidth.requestsCount++;
+    },
+
   }
 })

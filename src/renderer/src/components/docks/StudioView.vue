@@ -143,9 +143,10 @@ const updateScreenshots = () => {
     obs.call('GetSourceScreenshot', {
       sourceName: store.currentProgramSceneName,
       imageFormat: 'webp',
-      imageWidth: 640,
-      imageCompressionQuality: 10
+      imageWidth: store.screenshot.imageWidth,
+      imageCompressionQuality: store.screenshot.imageCompressionQuality
     }).then((programScreenshot) => {
+      store.updateBandwidth(programScreenshot.imageData.length)
       if (programImage.value)
         programImage.value.src = programScreenshot.imageData
       if (programAmbientImage.value)
@@ -158,9 +159,10 @@ const updateScreenshots = () => {
       obs.call('GetSourceScreenshot', {
         sourceName: store.currentPreviewSceneName,
         imageFormat: 'webp',
-        imageWidth: 640,
-        imageCompressionQuality: 10
+        imageWidth: store.screenshot.imageWidth,
+        imageCompressionQuality: store.screenshot.imageCompressionQuality
       }).then((previewScreenshot) => {
+        store.updateBandwidth(previewScreenshot.imageData.length)
         if (previewImage.value)
           previewImage.value.src = previewScreenshot.imageData
         if (previewAmbientImage.value)
