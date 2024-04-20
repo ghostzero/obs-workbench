@@ -204,7 +204,7 @@ const activeConnection = computed(() => {
   }) ?? {
     label: store.connection.ip,
     subtitle: `ws://${store.connection.ip}:${store.connection.port}`,
-    letter: { text: store.connection.ip[0], color: 'amber' },
+    letter: { text: store.connection.ip[0], color: 'rose' },
   }
 })
 
