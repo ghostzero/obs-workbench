@@ -65,7 +65,7 @@
           class="w-full text-white/50"
           @click="openPopup(AddScenePopup)"
         >
-          <i class="fas fa-plus" />
+          <i class="fas fa-grid-2-plus" />
           Add Scene
         </AppButton>
       </div>

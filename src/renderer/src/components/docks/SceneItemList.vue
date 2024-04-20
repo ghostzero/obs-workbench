@@ -82,7 +82,7 @@
           class="w-full text-white/50"
           @click="openPopup(AddSourcePopup)"
         >
-          <i class="fas fa-plus" />
+          <i class="fas fa-layer-plus" />
           Add Source
         </AppButton>
       </div>
@@ -101,6 +101,7 @@ import AppButton, {ButtonVariant} from "../atoms/AppButton.vue";
 import AppGoldenLayoutContainer from "../atoms/AppGoldenLayoutContainer.vue";
 import {usePopupStore} from "../../store/popup";
 import AddSourcePopup from "../popups/AddSourcePopup.vue";
+import SceneItemPropertiesPopup from "../popups/SceneItemPropertiesPopup.vue";
 
 const store = useAppStore()
 const { obs } = useObs()
@@ -144,8 +145,8 @@ const doubleClick = async (e: MouseEvent, item: SceneItem) => {
     selected.value = item
   }
   if (e.detail === 2) {
-    await obs.call('SetCurrentPreviewScene', {
-      sceneName: item.sourceName
+    openPopup(SceneItemPropertiesPopup, {
+      sceneItem: item
     })
   }
 }
