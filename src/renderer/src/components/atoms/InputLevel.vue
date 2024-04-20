@@ -52,9 +52,13 @@ const db = (mul: number) => {
   return Math.abs(20.0 * Math.log10(mul))
 }
 
+const calculateTargetLevel = (inputLevel: number): number => {
+  return inputLevel !== 0 ? (60 - db(inputLevel)) / 60 * 100 : 0
+}
+
 watch(() => props.inputLevels, () => {
-  targetLevelB.value = (60 - db(props.inputLevels[1])) / 60 * 100
-  targetLevelA.value = (60 - db(props.inputLevels[0])) / 60 * 100
+  targetLevelB.value = calculateTargetLevel(props.inputLevels[1])
+  targetLevelA.value = calculateTargetLevel(props.inputLevels[0])
 })
 </script>
 

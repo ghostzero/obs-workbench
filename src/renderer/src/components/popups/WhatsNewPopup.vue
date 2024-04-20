@@ -15,10 +15,6 @@
                 The Program Output is currently not "immutable" and changes when the user changes the scene. We're
                 waiting for [obs-websocket#1189].
               </li>
-              <li class="list-item">
-                We're currently experiencing issues with the Input Level Meter not updating after a certain amount of
-                time. We're investigating the issue.
-              </li>
             </ul>
           </div>
         </div>
@@ -39,6 +35,7 @@
             <li class="list-item">Improved bandwidth usage from 4.8MB/s to 1.4MB/s (in 30 seconds)</li>
             <li class="list-item">Improved detection if the app is running inside OWN3D Pro</li>
             <li class="list-item">Improved popup system to be more flexible and easier to use</li>
+            <li class="list-item">Fixed input level meter not updating when level was zero</li>
           </ul>
         </div>
         <div>
