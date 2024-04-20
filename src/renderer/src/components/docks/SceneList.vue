@@ -55,6 +55,21 @@
       title="No Scenes"
       description="Your **Scenes** list is empty."
     />
+    <template
+      v-if="items.length > 0"
+      #footer
+    >
+      <div class="p-2">
+        <AppButton
+          variant="outline"
+          class="w-full text-white/50"
+          @click="openPopup(AddScenePopup)"
+        >
+          <i class="fas fa-plus" />
+          Add Scene
+        </AppButton>
+      </div>
+    </template>
   </AppGoldenLayoutContainer>
 </template>
 
@@ -66,7 +81,10 @@ import { useSceneStore } from '../../store/scene'
 import AppEmptyState from '../atoms/AppEmptyState.vue'
 import AppButton, {ButtonVariant} from "../atoms/AppButton.vue";
 import AppGoldenLayoutContainer from "../atoms/AppGoldenLayoutContainer.vue";
+import {usePopupStore} from "../../store/popup";
+import AddScenePopup from "../popups/AddScenePopup.vue";
 
+const {openPopup} = usePopupStore()
 const store = useAppStore()
 const scene = useSceneStore()
 const {obs} = useObs()
@@ -75,9 +93,7 @@ const actions = [
   {
     label: 'Add Scene',
     variant: 'outline' as ButtonVariant,
-    onClick: () => {
-      // not implemented
-    }
+    onClick: () => openPopup(AddScenePopup)
   }
 ]
 

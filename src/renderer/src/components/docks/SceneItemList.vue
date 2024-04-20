@@ -72,6 +72,21 @@
       title="No Sources"
       description="Your **Scene** doesn't have any sources."
     />
+    <template
+      v-if="items.length > 0"
+      #footer
+    >
+      <div class="p-2">
+        <AppButton
+          variant="outline"
+          class="w-full text-white/50"
+          @click="openPopup(AddSourcePopup)"
+        >
+          <i class="fas fa-plus" />
+          Add Source
+        </AppButton>
+      </div>
+    </template>
   </AppGoldenLayoutContainer>
 </template>
 
@@ -82,20 +97,21 @@ import { computed, ref } from 'vue'
 import { useSceneStore } from '../../store/scene'
 import SceneItemIcon from '../atoms/SceneItemIcon.vue'
 import AppEmptyState from '../atoms/AppEmptyState.vue'
-import {ButtonVariant} from "../atoms/AppButton.vue";
+import AppButton, {ButtonVariant} from "../atoms/AppButton.vue";
 import AppGoldenLayoutContainer from "../atoms/AppGoldenLayoutContainer.vue";
+import {usePopupStore} from "../../store/popup";
+import AddSourcePopup from "../popups/AddSourcePopup.vue";
 
 const store = useAppStore()
 const { obs } = useObs()
 const { removeSceneItem } = useSceneStore()
+const {openPopup} = usePopupStore()
 
 const actions = [
   {
     label: 'Add Source',
     variant: 'outline' as ButtonVariant,
-    onClick: () => {
-      // not implemented
-    }
+    onClick: () => openPopup(AddSourcePopup)
   }
 ]
 
