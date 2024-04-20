@@ -5,9 +5,6 @@
         {{ props.volumeMeter.inputName }}
       </div>
       <div class="text-xs truncate">
-        {{ props.volumeMeter.inputLevelsMul.length }}
-      </div>
-      <div class="text-xs truncate">
         {{ input.inputVolumeDb <= -100 ? '-inf' : input.inputVolumeDb.toFixed(1) }} dB
       </div>
     </div>
