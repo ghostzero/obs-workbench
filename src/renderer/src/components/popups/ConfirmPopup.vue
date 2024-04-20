@@ -1,7 +1,5 @@
 <template>
-  <AppPopup
-    v-if="store.name === 'confirm'"
-  >
+  <AppPopup>
     <div class="my-3 text-center">
       {{ store.data?.message }}
     </div>

@@ -14,6 +14,7 @@
       >
         <AppButton
           :variant="action.variant"
+          class="text-white/50"
           @click="action.onClick"
         >
           {{ action.label }}

@@ -88,7 +88,7 @@
               <AppButton
                 class="px-8 !bg-zinc-700"
                 variant="outline"
-                @click="openPopup('login')"
+                @click="openPopup(LoginPopup)"
               >
                 Login / Create Account
               </AppButton>
@@ -148,7 +148,7 @@
       <AppProxyBanner
         v-if="!userStore.user"
         class="mt-12"
-        @login="openPopup('login')"
+        @login="openPopup(LoginPopup)"
       />
 
       <div class="text-white/50 text-xs text-center font-light mt-6">
@@ -171,6 +171,7 @@ import AppServerQuickConnect from '../atoms/AppServerQuickConnect.vue'
 import AppProxyBanner from '../molecules/AppProxyBanner.vue'
 import { useUserStore } from '../../store/user'
 import { storeToRefs } from 'pinia'
+import LoginPopup from "./LoginPopup.vue";
 
 const appStore = useAppStore()
 const { close } = usePopupStore()

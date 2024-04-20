@@ -1,7 +1,5 @@
 <template>
-  <AppPopup
-    v-if="store.name === 'login'"
-  >
+  <AppPopup>
     <form
       class="space-y-6 flex-grow"
       action="#"
@@ -50,6 +48,7 @@ import { ref } from 'vue'
 import AppInput from '../atoms/AppInput.vue'
 import AppButton from '../atoms/AppButton.vue'
 import { useUserStore } from '../../store/user'
+import ConnectPopup from "./ConnectPopup.vue";
 
 const store = usePopupStore()
 const userStore = useUserStore()
@@ -64,7 +63,7 @@ const login = () => {
   loading.value = true
   try {
     userStore.login(credentials.value)
-    store.openPopup('connect')
+    store.openPopup(ConnectPopup)
   } catch (error) {
     console.log(error)
   } finally {

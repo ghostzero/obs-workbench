@@ -1,5 +1,5 @@
 <template>
-  <AppPopup v-if="popup.name === 'add-source'">
+  <AppPopup>
     <div class="grid gap-4">
       <div class="text-center py-6">
         <i class="fas fa-grid-2-plus text-zinc-600 text-6xl mb-3"></i>

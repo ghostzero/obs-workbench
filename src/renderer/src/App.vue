@@ -52,7 +52,7 @@
           {
             label: 'Connect',
             variant: 'outline',
-            onClick: () => openPopup('connect')
+            onClick: () => openPopup(ConnectPopup)
           }
         ]"
       />
@@ -69,6 +69,7 @@ import AppGoldenLayout from './components/molecules/AppGoldenLayout.vue'
 import { useAppStore } from './store/app'
 import AppEmptyState from './components/atoms/AppEmptyState.vue'
 import { usePopupStore } from './store/popup'
+import ConnectPopup from "./components/popups/ConnectPopup.vue";
 
 const store = useAppStore()
 const { openPopup } = usePopupStore()

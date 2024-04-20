@@ -84,6 +84,8 @@ import { colorPalette } from '../../color-palette'
 import AppElectronControls from '../molecules/AppElectronControls.vue'
 import { useUserStore } from '../../store/user'
 import { storeToRefs } from 'pinia'
+import LoginPopup from "../popups/LoginPopup.vue";
+import ConnectPopup from "../popups/ConnectPopup.vue";
 
 const store = useAppStore()
 const { error } = useNotificationStore()
@@ -102,7 +104,7 @@ const secondLevelMenus = ref([
         id: 0,
         label: 'Sign in',
         icon: { name: 'sign-in' },
-        click: () => openPopup('login')
+        click: () => openPopup(LoginPopup)
       },
       {
         id: 1,
@@ -212,7 +214,7 @@ const setActiveConnection = async (item: MenuItem) => {
   if (!item.data) {
     switch (item.id) {
       case 0:
-        openPopup('connect')
+        openPopup(ConnectPopup)
         break
       default:
         error({
