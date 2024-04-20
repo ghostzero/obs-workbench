@@ -154,6 +154,7 @@
       <div class="text-white/50 text-xs text-center font-light mt-6">
         This project is not affiliated with OBS or any of their partners. All copyrights reserved to their respective
         owners. We do not recommend using this in production environments as it is still in early development.
+        Workbench Version: {{ gitHash }}
       </div>
     </template>
   </AppPopup>
@@ -188,6 +189,8 @@ const { error } = useNotificationStore()
 const { openPopup } = usePopupStore()
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
+
+const gitHash = import.meta.env.VITE_GIT_COMMIT_HASH as string
 
 const connect = async () => {
   connecting.value = true

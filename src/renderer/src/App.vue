@@ -21,20 +21,17 @@
               class="text-center text-sm text-gray-500 sm:text-left"
             >
               <span class="block sm:inline">
-                &copy; 2023 René Preuß. All rights reserved. Running OBS Websocket
+                &copy; 2024 René Preuß. All rights reserved. Running OBS Websocket
                 {{ store.version.obsWebSocketVersion }} on OBS Studio
                 {{ store.version.obsVersion }} on
                 {{ store.version.platformDescription }}.
               </span>
             </div>
             <div class="flex gap-2 text-center">
-              <!--
+
               <div class="flex gap-1.5 text-center text-sm text-gray-500 sm:text-left">
-                <div><b>Profile:</b> {{ store.profileList.currentProfileName}}</div>
-                <div>|</div>
-                <div><b>Scene Collection:</b> {{ store.sceneCollectionList.currentSceneCollectionName}}</div>
+                <div>Workbench Version: {{ gitHash }}</div>
               </div>
-              -->
             </div>
           </div>
         </footer>
@@ -73,4 +70,6 @@ import ConnectPopup from "./components/popups/ConnectPopup.vue";
 
 const store = useAppStore()
 const { openPopup } = usePopupStore()
+
+const gitHash = import.meta.env.VITE_GIT_COMMIT_HASH as string
 </script>
