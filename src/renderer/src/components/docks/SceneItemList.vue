@@ -1,75 +1,78 @@
 <template>
-  <nav
-    v-if="items.length > 0"
-    class="flex flex-1 flex-col"
-    aria-label="Sidebar"
-  >
-    <ul
-      role="list"
-      class="-mx-2 space-y-1"
+  <AppGoldenLayoutContainer>
+    <nav
+      v-if="items.length > 0"
+      class="flex flex-1 flex-col"
+      aria-label="Sidebar"
     >
-      <template
-        v-for="item in items"
-        :key="item.sourceName"
+      <ul
+        role="list"
+        class="-mx-2 space-y-1"
       >
-        <li>
-          <a
-            href="#"
-            @click.prevent="(e: MouseEvent) => doubleClick(e, item)"
-            :class="['group flex justify-between gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold', {
-              'bg-primary-500 text-white': selected === item,
-              'text-white hover:bg-zinc-700': selected !== item,
-            }]"
-          >
-            <div
-              :class="['truncate', {'text-white/50': !item.sceneItemEnabled}]"
+        <template
+          v-for="item in items"
+          :key="item.sourceName"
+        >
+          <li>
+            <a
+              href="#"
+              :class="['group flex justify-between gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold', {
+                'bg-primary-500 text-white': selected === item,
+                'text-white hover:bg-zinc-700': selected !== item,
+              }]"
+              @click.prevent="(e: MouseEvent) => doubleClick(e, item)"
             >
-              <SceneItemIcon :item="item" />
-              {{ item.sourceName }}
-            </div>
-            <div class="flex gap-4 items-center">
-              <a
-                href="#"
-                @click.prevent="removeSceneItem(store.currentSceneName, item)"
+              <div
+                :class="['truncate', {'text-white/50': !item.sceneItemEnabled}]"
               >
-                <i :class="['fas fa-fw fa-trash text-white/50 hover:text-white']" />
-              </a>
+                <SceneItemIcon :item="item" />
+                {{ item.sourceName }}
+              </div>
+              <div class="flex gap-4 items-center">
+                <a
+                  href="#"
+                  @click.prevent="removeSceneItem(store.currentSceneName, item)"
+                >
+                  <i :class="['fas fa-fw fa-trash text-white/50 hover:text-white']" />
+                </a>
 
-              <a
-                href="#"
-                @click.prevent="toggleEnabled(item)"
-              >
-                <i
-                  :class="['fas fa-fw', {
-                    'fa-eye': item.sceneItemEnabled,
-                    'fa-eye-slash text-white/50': !item.sceneItemEnabled,
-                  }]"
-                />
-              </a>
+                <a
+                  href="#"
+                  @click.prevent="toggleEnabled(item)"
+                >
+                  <i
+                    :class="['fas fa-fw', {
+                      'fa-eye': item.sceneItemEnabled,
+                      'fa-eye-slash text-white/50': !item.sceneItemEnabled,
+                    }]"
+                  />
+                </a>
 
-              <a
-                href="#"
-                @click.prevent="toggleLocked(item)"
-              >
-                <i
-                  :class="['fas fa-fw', {
-                    'fa-lock': item.sceneItemLocked,
-                    'fa-lock-open text-white/50': !item.sceneItemLocked,
-                  }]"
-                />
-              </a>
-            </div>
-          </a>
-        </li>
-      </template>
-    </ul>
-  </nav>
-  <AppEmptyState
-    v-else
-    :icon="{ name: 'list' }"
-    title="No Sources"
-    description="Your **Scene** doesn't have any sources."
-  />
+                <a
+                  href="#"
+                  @click.prevent="toggleLocked(item)"
+                >
+                  <i
+                    :class="['fas fa-fw', {
+                      'fa-lock': item.sceneItemLocked,
+                      'fa-lock-open text-white/50': !item.sceneItemLocked,
+                    }]"
+                  />
+                </a>
+              </div>
+            </a>
+          </li>
+        </template>
+      </ul>
+    </nav>
+    <AppEmptyState
+      v-else
+      :icon="{ name: 'list' }"
+      :actions="actions"
+      title="No Sources"
+      description="Your **Scene** doesn't have any sources."
+    />
+  </AppGoldenLayoutContainer>
 </template>
 
 <script setup lang="ts">
@@ -79,10 +82,22 @@ import { computed, ref } from 'vue'
 import { useSceneStore } from '../../store/scene'
 import SceneItemIcon from '../atoms/SceneItemIcon.vue'
 import AppEmptyState from '../atoms/AppEmptyState.vue'
+import {ButtonVariant} from "../atoms/AppButton.vue";
+import AppGoldenLayoutContainer from "../atoms/AppGoldenLayoutContainer.vue";
 
 const store = useAppStore()
 const { obs } = useObs()
 const { removeSceneItem } = useSceneStore()
+
+const actions = [
+  {
+    label: 'Add Source',
+    variant: 'outline' as ButtonVariant,
+    onClick: () => {
+      // not implemented
+    }
+  }
+]
 
 const selected = ref<SceneItem | null>(null)
 

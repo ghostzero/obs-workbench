@@ -1,63 +1,65 @@
 <template>
-  <div
-    ref="view"
-    class="grid h-full px-2"
-  >
-    <div class="flex items-center gap-3">
-      <div class="flex-1 h-full w-[1/2]">
-        <AppSectionTitle>Preview: {{ store.currentPreviewSceneName }}</AppSectionTitle>
-        <div class="flex h-[calc(100%-30px)] items-center justify-center">
-          <div class="relative">
-            <!--suppress RequiredAttributes -->
-            <img
-              ref="previewImage"
-              alt="preview"
-              class="absolute bg-black rounded-md shadow z-20"
-              :style="{width: `${scaledWidth}px`, height: `${scaledHeight}px`}"
-            >
-            <!--suppress RequiredAttributes -->
-            <img
-              ref="previewAmbientImage"
-              alt="preview ambient"
-              class="bg-black rounded-md blur-[9px] z-10"
-              :style="{width: `${scaledWidth}px`, height: `${scaledHeight}px`}"
-            >
+  <AppGoldenLayoutContainer>
+    <div
+      ref="view"
+      class="grid h-full px-2"
+    >
+      <div class="flex items-center gap-3">
+        <div class="flex-1 h-full w-[1/2]">
+          <AppSectionTitle>Preview: {{ store.currentPreviewSceneName }}</AppSectionTitle>
+          <div class="flex h-[calc(100%-30px)] items-center justify-center">
+            <div class="relative">
+              <!--suppress RequiredAttributes -->
+              <img
+                ref="previewImage"
+                alt="preview"
+                class="absolute bg-black rounded-md shadow z-20"
+                :style="{width: `${scaledWidth}px`, height: `${scaledHeight}px`}"
+              >
+              <!--suppress RequiredAttributes -->
+              <img
+                ref="previewAmbientImage"
+                alt="preview ambient"
+                class="bg-black rounded-md blur-[9px] z-10"
+                :style="{width: `${scaledWidth}px`, height: `${scaledHeight}px`}"
+              >
+            </div>
           </div>
         </div>
-      </div>
-      <div class="self-center flex flex-col gap-3 z-30">
-        <AppButton
-          class="mt-[44px]"
-          @click="transition"
+        <div class="self-center flex flex-col gap-3 z-30">
+          <AppButton
+            class="mt-[44px]"
+            @click="transition"
+          >
+            <i class="fas fa-arrow-right-arrow-left" />
+          </AppButton>
+        </div>
+        <div
+          class="flex-1 h-full w-[1/2]"
         >
-          <i class="fas fa-arrow-right-arrow-left" />
-        </AppButton>
-      </div>
-      <div
-        class="flex-1 h-full w-[1/2]"
-      >
-        <AppSectionTitle>Program: {{ store.currentProgramSceneName }}</AppSectionTitle>
-        <div class="flex h-[calc(100%-30px)] items-center justify-center">
-          <div class="relative">
-            <!--suppress RequiredAttributes -->
-            <img
-              ref="programImage"
-              alt="program"
-              class="absolute bg-black rounded-md shadow z-20"
-              :style="{width: `${scaledWidth}px`, height: `${scaledHeight}px`}"
-            >
-            <!--suppress RequiredAttributes -->
-            <img
-              ref="programAmbientImage"
-              alt="program ambient"
-              class="bg-black rounded-md blur-[9px] z-10"
-              :style="{width: `${scaledWidth}px`, height: `${scaledHeight}px`}"
-            >
+          <AppSectionTitle>Program: {{ store.currentProgramSceneName }}</AppSectionTitle>
+          <div class="flex h-[calc(100%-30px)] items-center justify-center">
+            <div class="relative">
+              <!--suppress RequiredAttributes -->
+              <img
+                ref="programImage"
+                alt="program"
+                class="absolute bg-black rounded-md shadow z-20"
+                :style="{width: `${scaledWidth}px`, height: `${scaledHeight}px`}"
+              >
+              <!--suppress RequiredAttributes -->
+              <img
+                ref="programAmbientImage"
+                alt="program ambient"
+                class="bg-black rounded-md blur-[9px] z-10"
+                :style="{width: `${scaledWidth}px`, height: `${scaledHeight}px`}"
+              >
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </AppGoldenLayoutContainer>
 </template>
 
 <script setup lang="ts">
@@ -66,6 +68,7 @@ import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useAppStore } from '../../store/app'
 import AppSectionTitle from '../atoms/AppSectionTitle.vue'
 import AppButton from '../atoms/AppButton.vue'
+import AppGoldenLayoutContainer from "../atoms/AppGoldenLayoutContainer.vue";
 
 const { obs } = useObs()
 const store = useAppStore()
