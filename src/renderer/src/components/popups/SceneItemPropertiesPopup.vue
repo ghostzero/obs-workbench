@@ -25,7 +25,7 @@
           <template v-for="input in formInputs" :key="input.name">
             <AppInput
               :id="input.name"
-              :type="input.type"
+              :type="input.type as any"
               :name="input.name"
               :label="input.label"
               :options="input.options"

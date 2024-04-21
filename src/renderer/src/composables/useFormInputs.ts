@@ -1,3 +1,5 @@
+import {InputType} from "node:zlib";
+
 export interface FormInputOption {
   value: string;
   text: string,
@@ -5,7 +7,7 @@ export interface FormInputOption {
 }
 
 export interface FormInput {
-  type: string;
+  type: InputType;
   label: string;
   name: string;
   options?: FormInputOption[];

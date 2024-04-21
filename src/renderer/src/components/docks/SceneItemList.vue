@@ -145,7 +145,7 @@ const doubleClick = async (e: MouseEvent, item: SceneItem) => {
     selected.value = item
   }
   if (e.detail === 2) {
-    openPopup(SceneItemPropertiesPopup, {
+    openPopup(SceneItemPropertiesPopup as any, {
       sceneItem: item
     })
   }
