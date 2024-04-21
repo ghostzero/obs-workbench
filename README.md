@@ -8,11 +8,15 @@ application that runs in your browser and communicates with OBS Studio via WebSo
 > This project is not affiliated with OBS or any of their partners. All copyrights reserved to their respective owners.
 > I do not recommend using this in production environments as it is still in early development.
 
+## Demo
+
+You can try out the demo at [open.obs-workbench.com](https://open.obs-workbench.com/). Please note that this is a
+pre-release version and may contain bugs.
+
 ## Goals
 
 My goal is to create a web application that can be used to control OBS Studio from any device in the world to serve the
-needs for IRL streamers. I want to make it as easy as possible to use and setup. I want to make it as secure as possible
-to use. I want to make it as reliable as possible to use.
+needs for IRL streamers. I want to make it as easy, secure and reliable as possible to control OBS Studio from anywhere.
 
 ## Features
 
