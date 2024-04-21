@@ -145,9 +145,11 @@
     </div>
 
     <template #footer>
+      <AppInsecureContentWarning />
+
       <AppProxyBanner
         v-if="!userStore.user"
-        class="mt-12"
+        class="mt-8"
         @login="openPopup(LoginPopup)"
       />
 
@@ -173,6 +175,7 @@ import AppProxyBanner from '../molecules/AppProxyBanner.vue'
 import { useUserStore } from '../../store/user'
 import { storeToRefs } from 'pinia'
 import LoginPopup from "./LoginPopup.vue";
+import AppInsecureContentWarning from "../atoms/AppInsecureContentWarning.vue";
 
 const appStore = useAppStore()
 const { close } = usePopupStore()
