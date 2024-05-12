@@ -1,12 +1,16 @@
 <template>
   <div
     v-if="store.component"
-    class="fixed inset-0 bg-zinc-950/90 z-50 flex items-center justify-center"
+    class="fixed inset-0 bg-zinc-950/90 z-50"
   >
-    <component
-      :is="store.component"
-      v-bind="store.data"
-    />
+    <div class="overflow-y-auto p-10 h-screen w-full">
+      <div class="flex min-h-full items-center justify-center">
+        <component
+          :is="store.component"
+          v-bind="store.data"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
