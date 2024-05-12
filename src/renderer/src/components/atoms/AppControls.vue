@@ -10,6 +10,7 @@
 
     <AppButton
       variant="ghost-titlebar"
+      @click="openPopup(WhatsNewPopup)"
     >
       <i class="fal fa-sparkles fa-fw" />
     </AppButton>
@@ -38,9 +39,12 @@ import { useObs } from '../../composables/useObs'
 import { useAppStore } from '../../store/app'
 import { useTimeoutable } from '../../composables/useTimeoutable'
 import AppButton from './AppButton.vue'
+import WhatsNewPopup from "../popups/WhatsNewPopup.vue";
+import {usePopupStore} from "../../store/popup";
 
 const { obs } = useObs()
 const store = useAppStore()
+const { openPopup } = usePopupStore()
 
 const {
   isLoading: recordingLoading,

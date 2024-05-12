@@ -104,7 +104,7 @@
               <AppButton
                 class="px-8 !bg-zinc-700"
                 variant="outline"
-                @click="openPopup('login')"
+                @click="openPopup(LoginPopup)"
               >
                 Login / Create Account
               </AppButton>
@@ -165,15 +165,18 @@
     <template #footer>
       <AppCloudServerBrowser class="mt-8" />
 
+      <AppInsecureContentWarning />
+
       <AppProxyBanner
         v-if="!userStore.user"
         class="mt-8"
-        @login="openPopup('login')"
+        @login="openPopup(LoginPopup)"
       />
 
       <div class="text-white/50 text-xs text-center font-light mt-6">
         This project is not affiliated with OBS or any of their partners. All copyrights reserved to their respective
         owners. We do not recommend using this in production environments as it is still in early development.
+        Workbench Version: {{ gitHash }}
       </div>
     </template>
   </AppPopup>
@@ -192,6 +195,8 @@ import AppProxyBanner from '../molecules/AppProxyBanner.vue'
 import { useUserStore } from '../../store/user'
 import { storeToRefs } from 'pinia'
 import AppCloudServerBrowser from '../molecules/AppCloudServerBrowser.vue'
+import LoginPopup from "./LoginPopup.vue";
+import AppInsecureContentWarning from "../atoms/AppInsecureContentWarning.vue";
 
 const appStore = useAppStore()
 const { close } = usePopupStore()
@@ -208,6 +213,8 @@ const { error } = useNotificationStore()
 const { openPopup } = usePopupStore()
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
+
+const gitHash = import.meta.env.VITE_GIT_COMMIT_HASH as string
 
 const sync = async () => {
   await userStore.sync()

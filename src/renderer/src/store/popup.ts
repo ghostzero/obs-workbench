@@ -1,36 +1,41 @@
 import { defineStore } from 'pinia'
+import {DefineComponent} from "vue";
+import ConnectPopup from "../components/popups/ConnectPopup.vue";
+import ConfirmPopup from "../components/popups/ConfirmPopup.vue";
 
 export interface Data {
   [key: string]: unknown
 }
 
 export interface State {
-  name: string | null,
+  component: PopupComponent | null,
   data: Data,
   confirmed: boolean,
 }
 
+export type PopupComponent = DefineComponent<{}, {}, any>
+
 export const usePopupStore = defineStore('popup', {
   state: (): State => {
     return {
-      name: 'connect',
+      component: ConnectPopup,
       data: {},
       confirmed: false
     }
   },
   actions: {
-    openPopup(name: string, data: Data = {}): void {
-      this.name = name
+    openPopup(component: PopupComponent, data: Data = {}): void {
+      this.component = component
       this.data = data
     },
     async confirm(data: Data): Promise<boolean> {
-      this.name = 'confirm'
+      this.component = ConfirmPopup
       this.data = data
 
       return new Promise((resolve) => {
         // wait for close method to be called
         const interval = setInterval(() => {
-          if (this.name === null) {
+          if (this.component === null) {
             clearInterval(interval)
             resolve(this.confirmed)
           }
@@ -38,7 +43,7 @@ export const usePopupStore = defineStore('popup', {
       })
     },
     close(confirmed = false): void {
-      this.name = null
+      this.component = null
       this.data = {}
       this.confirmed = confirmed
     }
