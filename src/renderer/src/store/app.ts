@@ -77,7 +77,7 @@ export interface State {
     platform: string
     platformDescription: string
     rpcVersion: number
-    supportedImageExportFormats: string[]
+    supportedImageFormats: string[]
   },
   stats: {
     cpuUsage: number,
@@ -167,7 +167,7 @@ export const useAppStore = defineStore('obs', {
         platformDescription: '',
         rpcVersion: 0,
         availableRequests: [],
-        supportedImageExportFormats: []
+        supportedImageFormats: []
       },
       stats: {
         cpuUsage: 0,
@@ -480,7 +480,7 @@ export const useAppStore = defineStore('obs', {
     },
     updateBandwidth(bytesTransferred: number) {
       // log in kb
-      console.log('bytesTransferred', bytesTransferred / 1024)
+      // console.log('bytesTransferred', bytesTransferred / 1024)
       this.bandwidth.bytesTransferred += bytesTransferred;
       this.bandwidth.requestsCount++;
     },

@@ -37,7 +37,7 @@
             class="mt-[44px]"
             @click="transition"
           >
-            <i class="fas fa-arrow-right-arrow-left"/>
+            <i class="fas fa-arrow-right-arrow-left" />
           </AppButton>
         </div>
         <div
@@ -69,14 +69,14 @@
 </template>
 
 <script setup lang="ts">
-import {useObs} from '../../composables/useObs'
-import {onBeforeUnmount, onMounted, ref, watch} from 'vue'
-import {useAppStore} from '../../store/app'
+import { useObs } from '../../composables/useObs'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useAppStore } from '../../store/app'
 import AppSectionTitle from '../atoms/AppSectionTitle.vue'
 import AppButton from '../atoms/AppButton.vue'
-import AppGoldenLayoutContainer from "../atoms/AppGoldenLayoutContainer.vue";
+import AppGoldenLayoutContainer from '../atoms/AppGoldenLayoutContainer.vue'
 
-const {obs} = useObs()
+const { obs } = useObs()
 const store = useAppStore()
 
 const previewImage = ref<HTMLImageElement>()
@@ -90,7 +90,7 @@ const view = ref<HTMLDivElement>()
 
 const observer = new ResizeObserver((entries) => {
   for (const entry of entries) {
-    const {width, height} = entry.contentRect
+    const { width, height } = entry.contentRect
 
     const allowedWidth = store.studioMode ? (width / 2) : width
     const viewWidth = allowedWidth - 30
@@ -122,17 +122,20 @@ onBeforeUnmount(() => {
   if (view.value) observer.unobserve(view.value)
 })
 
+const imageFormats = store.version.supportedImageFormats || []
+const preferredImageFormat = ['webp', 'jpeg', 'png'].find(format => imageFormats.includes(format)) || 'jpg'
+
 const transition = async () => {
-  const {currentPreviewSceneName} = await obs.call('GetCurrentPreviewScene')
+  const { currentPreviewSceneName } = await obs.call('GetCurrentPreviewScene')
   await obs.call('SetCurrentProgramScene', {
     sceneName: currentPreviewSceneName
   })
-  updateScreenshots()
+  updateScreenshots(preferredImageFormat)
 }
 
 let timeoutId: ReturnType<typeof setTimeout>
 
-const updateScreenshots = () => {
+const updateScreenshots = (imageFormat: string = 'jpeg') => {
   // Clear any existing timeout to avoid overlapping calls
   clearTimeout(timeoutId)
 
@@ -142,7 +145,7 @@ const updateScreenshots = () => {
   promises.push(
     obs.call('GetSourceScreenshot', {
       sourceName: store.currentProgramSceneName,
-      imageFormat: 'webp',
+      imageFormat,
       imageWidth: store.screenshot.imageWidth,
       imageCompressionQuality: store.screenshot.imageCompressionQuality
     }).then((programScreenshot) => {
@@ -158,7 +161,7 @@ const updateScreenshots = () => {
     promises.push(
       obs.call('GetSourceScreenshot', {
         sourceName: store.currentPreviewSceneName,
-        imageFormat: 'webp',
+        imageFormat,
         imageWidth: store.screenshot.imageWidth,
         imageCompressionQuality: store.screenshot.imageCompressionQuality
       }).then((previewScreenshot) => {
@@ -173,15 +176,15 @@ const updateScreenshots = () => {
 
   // Use Promise.all to wait for all promises to resolve
   Promise.all(promises).then(() => {
-    timeoutId = setTimeout(() => updateScreenshots(), 150)
+    timeoutId = setTimeout(() => updateScreenshots(preferredImageFormat), 150)
   }).catch(error => {
     console.error('Failed to update screenshots:', error)
-    timeoutId = setTimeout(() => updateScreenshots(), 100)
+    timeoutId = setTimeout(() => updateScreenshots(preferredImageFormat), 100)
   })
 }
 
 onMounted(async () => {
-  updateScreenshots()
+  updateScreenshots(preferredImageFormat)
 })
 
 onBeforeUnmount(() => {
