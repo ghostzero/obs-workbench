@@ -1,87 +1,92 @@
 <template>
   <AppPopup max-width="3xl">
-    <div class="grid gap-4">
-      <div class="text-center py-6">
-        <i class="fas fa-layer-plus text-zinc-600 text-6xl mb-3" />
-        <div>
-          <h2 class="text-2xl font-bold">
-            Add Source
-          </h2>
-          <p class="text-zinc-400">
-            Add a new source to the current scene
-          </p>
-        </div>
-      </div>
-      <div>
-        <AppInput
-          id="name"
-          v-model="inputName"
-          label="Name"
-          name="name"
-        />
-      </div>
-      <div>
-        <div class="border-b border-zinc-700" />
-      </div>
-      <div class="grid grid-cols-3 gap-2">
-        <template v-for="source in sources">
-          <div v-if="!source.native">
-            <AppButton
-              :variant="source.name.includes('Scene Builder') ? 'own3d' : 'secondary'"
-              class="group w-full"
-              @click="source.create"
-            >
-              <div
-                v-if="source.name.includes('Scene Builder')"
-                class="text-[10px] opacity-90 absolute top-1 right-1 bg-[#ff9602] text-white group-hover:bg-white group-hover:text-[#ff9602] px-1 rounded"
-              >
-                Recommended
+    <AppWizard
+      :steps="[
+        { title: 'Add Source' },
+        { title: 'Configure Source' },
+      ]"
+    >
+      <template v-slot:steps="{ currentStep }">
+        <div v-if="currentStep === 1">
+          <div class="grid gap-4">
+            <div class="text-center py-6">
+              <i class="fas fa-layer-plus text-zinc-600 text-6xl mb-3" />
+              <div>
+                <h2 class="text-2xl font-bold">
+                  Add Source
+                </h2>
+                <p class="text-zinc-400">
+                  Add a new source to the current scene
+                </p>
               </div>
-              <i :class="['mr-0.1 text-xl', source.icon]" />
-              <div class="text-xs opacity-70">
-                {{ source.name }}
+            </div>
+            <div>
+              <AppInput
+                id="name"
+                v-model="inputName"
+                label="Name"
+                name="name"
+              />
+            </div>
+            <div>
+              <div class="border-b border-zinc-700" />
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+              <template v-for="source in sources">
+                <div v-if="!source.native">
+                  <AppButton
+                    :variant="source.name.includes('Scene Builder') ? 'own3d' : 'secondary'"
+                    class="group w-full"
+                    @click="source.create"
+                  >
+                    <div
+                      v-if="source.name.includes('Scene Builder')"
+                      class="text-[10px] opacity-90 absolute top-1 right-1 bg-[#ff9602] text-white group-hover:bg-white group-hover:text-[#ff9602] px-1 rounded"
+                    >
+                      Recommended
+                    </div>
+                    <i :class="['mr-0.1 text-xl', source.icon]" />
+                    <div class="text-xs opacity-70">
+                      {{ source.name }}
+                    </div>
+                  </AppButton>
+                </div>
+              </template>
+            </div>
+            <div class="flex items-center gap-2 -my-2">
+              <div class="flex-1">
+                <div class="border-b border-zinc-700" />
               </div>
-            </AppButton>
+              <div class="flex-none text-sm text-zinc-500">
+                or
+              </div>
+              <div class="flex-1">
+                <div class="border-b border-zinc-700" />
+              </div>
+            </div>
+            <div class="grid grid-cols-3 gap-2 overflow-y-auto h-40">
+              <template v-for="source in sources">
+                <div v-if="source.native">
+                  <AppButton
+                    variant="outline"
+                    class="w-full"
+                    @click="source.create"
+                  >
+                    <i :class="['mr-0.1 text-xl', source.icon]" />
+                    <div class="text-xs text-white/70">
+                      {{ source.name }}
+                    </div>
+                  </AppButton>
+                </div>
+              </template>
+            </div>
           </div>
-        </template>
-      </div>
-      <div class="flex items-center gap-2 -my-2">
-        <div class="flex-1">
-          <div class="border-b border-zinc-700" />
         </div>
-        <div class="flex-none text-sm text-zinc-500">
-          or
+        <div v-if="currentStep === 2">
+          step 2
         </div>
-        <div class="flex-1">
-          <div class="border-b border-zinc-700" />
-        </div>
-      </div>
-      <div class="grid grid-cols-3 gap-2 overflow-y-auto h-40">
-        <template v-for="source in sources">
-          <div v-if="source.native">
-            <AppButton
-              variant="outline"
-              class="w-full"
-              @click="source.create"
-            >
-              <i :class="['mr-0.1 text-xl', source.icon]" />
-              <div class="text-xs text-white/70">
-                {{ source.name }}
-              </div>
-            </AppButton>
-          </div>
-        </template>
-      </div>
-
-      <!-- wizard steps in bulls -->
-      <div>
-        <div class="border-b border-zinc-700" />
-      </div>
-      <div class="flex gap-2 justify-center text-xs">
-        <i class="fas fa-circle text-zinc-200" />
-        <i class="fas fa-circle text-zinc-600" />
-      </div>
-    </div>
+      </template>
+    </AppWizard>
   </AppPopup>
 </template>
 
@@ -93,6 +98,7 @@ import { useSceneStore } from '../../store/scene'
 import { useAppStore } from '../../store/app'
 import AppInput from '../atoms/AppInput.vue'
 import { ref } from 'vue'
+import AppWizard from '../molecules/AppWizard.vue'
 
 const inputName = ref('New Source')
 
