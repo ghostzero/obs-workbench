@@ -10,9 +10,9 @@
       <template v-if="props.type === 'checkbox'">
         <input
           :id="props.id"
-          :name="props.name"
+          :name="props.propertyName"
           :type="props.type"
-          :autocomplete="props.name"
+          :autocomplete="props.propertyName"
           :required="props.required"
           class="block rounded border-0 text-primary-600 bg-zinc-700 py-1.5 focus:ring-0 focus:ring-offset-0 shadow-sm sm:text-sm sm:leading-6"
           :checked="props.modelValue as boolean"
@@ -22,8 +22,8 @@
       <template v-else-if="props.type === 'textarea'">
         <textarea
           :id="props.id"
-          :name="props.name"
-          :autocomplete="props.name"
+          :name="props.propertyName"
+          :autocomplete="props.propertyName"
           :required="props.required"
           class="block w-full rounded-md border-0 bg-zinc-700 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary-500 sm:text-sm sm:leading-6"
           :value="props.modelValue as string"
@@ -33,8 +33,8 @@
       <template v-else-if="props.type === 'select'">
         <select
           :id="props.id"
-          :name="props.name"
-          :autocomplete="props.name"
+          :name="props.propertyName"
+          :autocomplete="props.propertyName"
           :required="props.required"
           class="block w-full rounded-md border-0 bg-zinc-700 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary-500 sm:text-sm sm:leading-6"
           :value="props.modelValue"
@@ -53,9 +53,9 @@
         {{ props.modelValue }}
         <input
           :id="props.id"
-          :name="props.name"
+          :name="props.propertyName"
           type="color"
-          :autocomplete="props.name"
+          :autocomplete="props.propertyName"
           :required="props.required"
           class="block w-full rounded-md border-0 bg-zinc-700 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary-500 sm:text-sm sm:leading-6"
           :value="fromObs(props.modelValue as number)"
@@ -65,9 +65,9 @@
       <input
         v-else
         :id="props.id"
-        :name="props.name"
+        :name="props.propertyName"
         :type="props.type"
-        :autocomplete="props.name"
+        :autocomplete="props.propertyName"
         :required="props.required"
         class="block w-full rounded-md border-0 bg-zinc-700 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary-500 sm:text-sm sm:leading-6"
         :value="props.modelValue"
@@ -111,7 +111,7 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  name: {
+  propertyName: {
     type: String,
     required: true,
   },

@@ -21,15 +21,16 @@
             No properties available for this source
           </div>
         </div>
-        <div class="grid gap-2.5">
-          <template v-for="input in formInputs" :key="input.name">
+        <div class="grid grid-cols-6 gap-2.5">
+          <template v-for="input in formInputs" :key="input.propertyName">
             <AppInput
-              :id="input.name"
+              :id="input.propertyName"
               :type="input.type as any"
-              :name="input.name"
+              :property-name="input.propertyName"
               :label="input.label"
               :options="input.options"
               :model-value="getInputValue(input)"
+              :class="input.colspan ? `col-span-${input.colspan}` : `col-span-6`"
               @update:model-value="value => setInputValue(input, value)"
             />
           </template>
@@ -48,6 +49,17 @@
           </AppButton>
         </div>
         <div class="flex-none flex gap-2">
+          <template
+            v-for="button in formButtons"
+          >
+            <AppButton
+              :variant="button.variant"
+              class="px-8"
+              @click="pressInputPropertiesButton(button)"
+            >
+              {{ button.text }}
+            </AppButton>
+          </template>
           <AppButton
             variant="secondary"
             class="px-8"
@@ -75,13 +87,15 @@ import AppPopup from '../molecules/AppPopup.vue'
 import {SceneItem} from "../../store/app";
 import {useObs} from "../../composables/useObs";
 import {onMounted, ref} from "vue";
-import {FormInput, FormInputOption, useFormInputs} from "../../composables/useFormInputs";
+import { FormButton, FormInput, FormInputOption, useFormInputs } from '../../composables/useFormInputs'
 import AppInput from "../atoms/AppInput.vue";
 import AppButton from '../atoms/AppButton.vue'
 import {usePopupStore} from "../../store/popup";
+import { useNotificationStore } from '../../store/notification'
 
 const {obs} = useObs()
 const { close } = usePopupStore()
+const { success, exception } = useNotificationStore()
 
 const props = defineProps<{
   sceneItem: SceneItem,
@@ -89,12 +103,29 @@ const props = defineProps<{
 
 const loading = ref(true)
 const formInputs = ref<FormInput[]>([])
+const formButtons = ref<FormButton[]>([])
 const inputSettings = ref<{
   [key: string]: any
 }>({})
 const defaultInputSettings = ref<{
   [key: string]: any
 }>({})
+
+const pressInputPropertiesButton = async (formButton: FormButton) => {
+  try {
+    await obs.call('PressInputPropertiesButton', {
+      inputName: props.sceneItem.sourceName,
+      propertyName: formButton.propertyName,
+    })
+    success({
+      title: 'Success',
+      message: `Button '${formButton.text}' was pressed`,
+      type: 'success'
+    })
+  } catch (e) {
+    exception(e)
+  }
+}
 
 const getSceneItemProperties = async () => {
   const responseA = await obs.call('GetInputSettings', {
@@ -105,12 +136,12 @@ const getSceneItemProperties = async () => {
     inputKind: responseA.inputKind,
   })
 
-  const inputs = useFormInputs(responseA.inputKind)
+  const {formInputs: inputs, formButtons: buttons} = useFormInputs(responseA.inputKind)
   for (const input of inputs) {
     if (input.type === 'select' && input.options === undefined) {
       const response = await obs.call('GetInputPropertiesListPropertyItems', {
         inputName: props.sceneItem.sourceName,
-        propertyName: input.name,
+        propertyName: input.propertyName,
       })
 
       input.options = response.propertyItems.map(item => {
@@ -126,11 +157,12 @@ const getSceneItemProperties = async () => {
   inputSettings.value = responseA.inputSettings
   defaultInputSettings.value = responseB.defaultInputSettings
   formInputs.value = inputs
+  formButtons.value = buttons
   loading.value = false
 }
 
 const getInputValue = (input: FormInput) => {
-  return inputSettings.value[input.name] ?? defaultInputSettings.value[input.name]
+  return inputSettings.value[input.propertyName] ?? defaultInputSettings.value[input.propertyName]
 }
 
 const setInputValue = (input: FormInput, value: any) => {
@@ -143,7 +175,7 @@ const setInputValue = (input: FormInput, value: any) => {
 
   inputSettings.value = {
     ...inputSettings.value,
-    [input.name]: value,
+    [input.propertyName]: value,
   }
 }
 
