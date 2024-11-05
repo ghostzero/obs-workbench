@@ -30,7 +30,7 @@
               :label="input.label"
               :options="input.options"
               :model-value="getInputValue(input)"
-              :class="input.colspan ? `col-span-${input.colspan}` : `col-span-6`"
+              :class="inputClass(input)"
               @update:model-value="value => setInputValue(input, value)"
             />
           </template>
@@ -84,16 +84,16 @@
 
 <script setup lang="ts">
 import AppPopup from '../molecules/AppPopup.vue'
-import {SceneItem} from "../../store/app";
-import {useObs} from "../../composables/useObs";
-import {onMounted, ref} from "vue";
+import { SceneItem } from '../../store/app'
+import { useObs } from '../../composables/useObs'
+import { onMounted, ref } from 'vue'
 import { FormButton, FormInput, FormInputOption, useFormInputs } from '../../composables/useFormInputs'
-import AppInput from "../atoms/AppInput.vue";
+import AppInput from '../atoms/AppInput.vue'
 import AppButton from '../atoms/AppButton.vue'
-import {usePopupStore} from "../../store/popup";
+import { usePopupStore } from '../../store/popup'
 import { useNotificationStore } from '../../store/notification'
 
-const {obs} = useObs()
+const { obs } = useObs()
 const { close } = usePopupStore()
 const { success, exception } = useNotificationStore()
 
@@ -115,7 +115,7 @@ const pressInputPropertiesButton = async (formButton: FormButton) => {
   try {
     await obs.call('PressInputPropertiesButton', {
       inputName: props.sceneItem.sourceName,
-      propertyName: formButton.propertyName,
+      propertyName: formButton.propertyName
     })
     success({
       title: 'Success',
@@ -129,26 +129,26 @@ const pressInputPropertiesButton = async (formButton: FormButton) => {
 
 const getSceneItemProperties = async () => {
   const responseA = await obs.call('GetInputSettings', {
-    inputName: props.sceneItem.sourceName,
+    inputName: props.sceneItem.sourceName
   })
 
   const responseB = await obs.call('GetInputDefaultSettings', {
-    inputKind: responseA.inputKind,
+    inputKind: responseA.inputKind
   })
 
-  const {formInputs: inputs, formButtons: buttons} = useFormInputs(responseA.inputKind)
+  const { formInputs: inputs, formButtons: buttons } = useFormInputs(responseA.inputKind)
   for (const input of inputs) {
     if (input.type === 'select' && input.options === undefined) {
       const response = await obs.call('GetInputPropertiesListPropertyItems', {
         inputName: props.sceneItem.sourceName,
-        propertyName: input.propertyName,
+        propertyName: input.propertyName
       })
 
       input.options = response.propertyItems.map(item => {
         return {
           value: item.itemValue,
           text: item.itemName,
-          enabled: item.itemEnabled,
+          enabled: item.itemEnabled
         } as FormInputOption
       })
     }
@@ -175,7 +175,7 @@ const setInputValue = (input: FormInput, value: any) => {
 
   inputSettings.value = {
     ...inputSettings.value,
-    [input.propertyName]: value,
+    [input.propertyName]: value
   }
 }
 
@@ -187,10 +187,22 @@ const saveSceneItemProperties = async () => {
   await obs.call('SetInputSettings', {
     inputName: props.sceneItem.sourceName,
     inputSettings: inputSettings.value,
-    overlay: false,
+    overlay: false
   })
 
   close()
+}
+
+const inputClass = (input: FormInput) => {
+  const colspan = input.colspan ?? 6
+  return {
+    'col-span-6': colspan === 6,
+    'col-span-5': colspan === 5,
+    'col-span-4': colspan === 4,
+    'col-span-3': colspan === 3,
+    'col-span-2': colspan === 2,
+    'col-span-1': colspan === 1
+  }
 }
 
 onMounted(async () => {
