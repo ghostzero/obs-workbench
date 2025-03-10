@@ -1,27 +1,31 @@
 <template>
-  <div class="relative inline-block text-left">
+  <div class="relative text-left">
     <a
       ref="ignoreElRef"
       href="#"
-      class="flex group items-center gap-3 p-1.5 rounded -m-1.5 hover:bg-white/10"
+      class="flex group items-center gap-2 py-1.5 px-3 rounded hover:bg-white/10 w-full whitespace-nowrap justify-between"
       @click.prevent="open = !open"
     >
-      <div
-        v-if="props.icon"
-      >
-        <i :class="['fal fa-fw', `fa-${props.icon.name}`]" />
-      </div>
-      <div
-        v-if="props.letter"
-        class="w-6 h-6 rounded flex justify-center items-center"
-        :style="calculateLetterColor(props.letter.color)"
-      >
-        {{ props.letter.text }}
+      <div class="flex items-center gap-2">
+        <div
+          v-if="props.icon"
+        >
+          <i :class="['fal fa-fw', `fa-${props.icon.name}`]" />
+        </div>
+        <div
+          v-if="props.letter"
+          class="w-6 h-6 rounded flex justify-center items-center"
+          :style="calculateLetterColor(props.letter.color)"
+        >
+          {{ props.letter.text }}
+        </div>
+        <div>
+          <slot />
+        </div>
       </div>
       <div>
-        <slot />
+        <i class="fal fa-fw fa-chevron-down text-xs" />
       </div>
-      <i class="fal fa-fw fa-chevron-down text-xs" />
     </a>
 
     <div

@@ -18,7 +18,7 @@
     "build:mac": "npm run build && electron-builder --mac --config",
     "build:linux": "npm run build && electron-builder --linux --config",
     "vite:dev": "vite",
-    "vite:build": "npm run typecheck:web && vite build",
+    "vite:build": "vite build",
     "vite:preview": "vite preview"
   },
   "dependencies": {

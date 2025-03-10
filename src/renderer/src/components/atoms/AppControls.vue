@@ -5,7 +5,7 @@
       variant="ghost-titlebar"
     >
       <i class="fal fa-question-circle fa-fw mr-1" />
-      Help
+      <span class="max-lg:hidden">Help</span>
     </AppButton>
 
     <AppButton
@@ -20,7 +20,8 @@
       :variant="store.streamStatus.outputActive ? 'solid-titlebar' : 'ghost-titlebar'"
       @click="toggleStreaming"
     >
-      {{ store.streamStatus.outputActive ? 'Stop Streaming' : 'Start Streaming' }}
+      <i :class="['far fa-signal-stream fa-fw lg:hidden']" />
+      <span class="max-lg:hidden">{{ store.streamStatus.outputActive ? 'Stop Streaming' : 'Start Streaming' }}</span>
     </AppButton>
 
     <AppButton
@@ -28,7 +29,8 @@
       :variant="store.recordStatus.outputActive ? 'solid-titlebar' : 'ghost-titlebar'"
       @click="toggleRecording"
     >
-      {{ store.recordStatus.outputActive ? 'Stop Recording' : 'Start Recording' }}
+      <i class="far fa-film lg:hidden" />
+      <span class="max-lg:hidden">{{ store.recordStatus.outputActive ? 'Stop Recording' : 'Start Recording' }}</span>
     </AppButton>
   </div>
 </template>
@@ -39,8 +41,8 @@ import { useObs } from '../../composables/useObs'
 import { useAppStore } from '../../store/app'
 import { useTimeoutable } from '../../composables/useTimeoutable'
 import AppButton from './AppButton.vue'
-import WhatsNewPopup from "../popups/WhatsNewPopup.vue";
-import {usePopupStore} from "../../store/popup";
+import WhatsNewPopup from '../popups/WhatsNewPopup.vue'
+import { usePopupStore } from '../../store/popup'
 
 const { obs } = useObs()
 const store = useAppStore()

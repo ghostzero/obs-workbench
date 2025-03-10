@@ -1,4 +1,5 @@
 import {InputType} from "node:zlib";
+import { ButtonVariant } from '@renderer/components/atoms/AppButton.vue'
 
 export interface FormInputOption {
   value: string;
@@ -15,7 +16,7 @@ export interface FormInput {
 }
 
 export interface FormButton {
-  variant: string;
+  variant: ButtonVariant;
   text: string;
   propertyName: string;
 }

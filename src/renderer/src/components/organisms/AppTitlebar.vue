@@ -5,7 +5,7 @@
   >
     <div class="flex items-center justify-between px-8 py-2 gap-5">
       <OnClickOutside
-        class="flex items-center gap-5"
+        class="flex items-center gap-2"
         @trigger="showSecondLevelMenu = false"
       >
         <button
@@ -16,21 +16,47 @@
           <i class="fas fa-fw fa-bars"/>
         </button>
 
-        <template
+        <div
           v-if="showSecondLevelMenu"
+          class="max-lg:absolute max-lg:w-40 max-lg:top-14 max-lg:left-2 max-lg:rounded max-lg:bg-zinc-800 max-lg:shadow-xl max-lg:text-white/90 max-lg:ring-1 max-lg:ring-zinc-700 max-lg:z-[300]"
         >
-          <template
-            v-for="secondLevelMenu in secondLevelMenus"
-            :key="secondLevelMenu.label"
-          >
-            <AppTitlebarDropdown
-              :menu-items="secondLevelMenu.menuItems"
-              @select="(e) => e.click()"
+          <div class="flex max-lg:flex-col flex-row lg:gap-2 max-lg:bg-white/[0.03] max-lg:p-2">
+            <template
+              v-for="secondLevelMenu in secondLevelMenus"
+              :key="secondLevelMenu.label"
             >
-              {{ secondLevelMenu.label }}
-            </AppTitlebarDropdown>
-          </template>
-        </template>
+              <div>
+                <AppTitlebarDropdown
+                  :menu-items="secondLevelMenu.menuItems"
+                  @select="(e) => e.click()"
+                >
+                  {{ secondLevelMenu.label }}
+                </AppTitlebarDropdown>
+              </div>
+            </template>
+
+            <div class="lg:hidden">
+              <AppTitlebarDropdown
+                v-if="store.connected"
+                :menu-items="sceneCollectionMenuItems"
+                :selected="store.sceneCollectionList.currentSceneCollectionName"
+                @select="setActiveSceneCollection"
+              >
+                {{ store.sceneCollectionList.currentSceneCollectionName }}
+              </AppTitlebarDropdown>
+            </div>
+            <div class="lg:hidden">
+              <AppTitlebarDropdown
+                v-if="store.connected"
+                :menu-items="profileMenuItems"
+                :selected="store.profileList.currentProfileName"
+                @select="setActiveProfile"
+              >
+                {{ store.profileList.currentProfileName }}
+              </AppTitlebarDropdown>
+            </div>
+          </div>
+        </div>
 
         <template v-else>
           <AppTitlebarDropdown
@@ -43,6 +69,7 @@
 
           <AppTitlebarDropdown
             v-if="store.connected"
+            class="max-lg:hidden"
             :icon="{name: 'user'}"
             :menu-items="profileMenuItems"
             :selected="store.profileList.currentProfileName"
@@ -53,6 +80,7 @@
 
           <AppTitlebarDropdown
             v-if="store.connected"
+            class="max-lg:hidden"
             :icon="{name: 'rectangle-history'}"
             :menu-items="sceneCollectionMenuItems"
             :selected="store.sceneCollectionList.currentSceneCollectionName"
@@ -121,7 +149,7 @@ const secondLevelMenus = computed(() => {
         {
           id: 0,
           label: 'Studio Mode',
-          icon: store.studioMode ? {name: 'check'} : undefined,
+          icon: store.studioMode ? {name: 'check'} : {name: 'empty'},
           click: () => store.toggleStudioMode()
         },
         {
