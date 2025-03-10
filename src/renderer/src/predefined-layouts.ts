@@ -86,8 +86,8 @@ export const defaultLayoutConfig: LayoutConfig = {
                 maximised: false,
                 isClosable: true,
                 reorderEnabled: true,
-                title: 'Main',
-                componentType: 'Main',
+                title: 'Studio View',
+                componentType: 'StudioView',
                 componentState: {
                   refId: 2
                 }

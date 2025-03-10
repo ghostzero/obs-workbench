@@ -1,6 +1,6 @@
 import { Ref } from 'vue'
 
-export async function useWaitForRef<T>(ref: Ref) {
+export async function useWaitForRef<T>(ref: Ref): Promise<T> {
   return new Promise<T>((resolve) => {
     const interval = setInterval(() => {
       if (ref.value) {
