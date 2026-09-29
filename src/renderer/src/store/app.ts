@@ -29,7 +29,20 @@ export interface Connection {
   tls: boolean,
   ip: string,
   port: string,
-  password: string
+  password: string,
+  /**
+   * Path and query after host and port, e.g. `/01a0eebf-...` for a relay
+   * that serves many OBS instances on one address. Empty for a plain server.
+   */
+  path?: string
+}
+
+/**
+ * The WebSocket URL for a connection.
+ */
+export function connectionUrl(connection: Connection): string {
+  const protocol = connection.tls ? 'wss' : 'ws'
+  return `${protocol}://${connection.ip}:${connection.port}${connection.path ?? ''}`
 }
 
 export interface State {
@@ -229,9 +242,7 @@ export const useAppStore = defineStore('obs', {
       await this.disconnect()
 
       this.connection = connection
-      const protocol = connection.tls ? 'wss' : 'ws'
-      const url = `${protocol}://${connection.ip}:${connection.port}`
-      this.hello = await websocket.connect(url, connection.password, {
+      this.hello = await websocket.connect(connectionUrl(connection), connection.password, {
         eventSubscriptions: EventSubscription.All | EventSubscription.InputVolumeMeters,
         rpcVersion: 1
       }) as unknown as State['hello']

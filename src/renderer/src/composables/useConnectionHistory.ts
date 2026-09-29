@@ -1,6 +1,14 @@
 import { Ref, ref } from 'vue'
 import { Connection } from '@renderer/store/app'
 
+/**
+ * Two entries are the same server when host, port and path match. The path
+ * matters for relays that serve many OBS instances on one host and port.
+ */
+const sameServer = (a: Connection, b: Connection): boolean => {
+  return a.ip === b.ip && a.port === b.port && (a.path ?? '') === (b.path ?? '')
+}
+
 export function useConnectionHistory() {
   const connections: Ref<Connection[]> = ref([])
 
@@ -9,9 +17,7 @@ export function useConnectionHistory() {
   }
 
   const saveConnection = (connection: Connection) => {
-    const index = connections.value.findIndex(x => {
-      return connection.ip === x.ip && connection.port === x.port
-    })
+    const index = connections.value.findIndex(x => sameServer(connection, x))
 
     if (index >= 0) {
       connections.value[index] = connection
@@ -23,9 +29,7 @@ export function useConnectionHistory() {
   }
 
   const deleteConnection = (connection: Connection) => {
-    const index = connections.value.findIndex(x => {
-      return connection.ip === x.ip && connection.port === x.port
-    })
+    const index = connections.value.findIndex(x => sameServer(connection, x))
 
     if (index >= 0) {
       connections.value.splice(index, 1)
