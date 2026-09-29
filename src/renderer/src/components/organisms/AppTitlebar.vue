@@ -103,7 +103,7 @@
 import {OnClickOutside} from '@vueuse/components'
 import AppTitlebarDropdown, {MenuItem} from '../atoms/AppTitlebarDropdown.vue'
 import {computed, Ref, ref} from 'vue'
-import {Connection, useAppStore} from '../../store/app'
+import {Connection, connectionUrl, useAppStore} from '../../store/app'
 import {useObs} from '../../composables/useObs'
 import {useNotificationStore} from '../../store/notification'
 import AppControls from '../atoms/AppControls.vue'
@@ -264,7 +264,7 @@ const activeConnection = computed(() => {
       connection.password === store.connection.password
   }) ?? {
     label: store.connection.ip,
-    subtitle: `ws://${store.connection.ip}:${store.connection.port}`,
+    subtitle: connectionUrl(store.connection),
     letter: {text: store.connection.ip[0], color: 'rose'},
   }
 })

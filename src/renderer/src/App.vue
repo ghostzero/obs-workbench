@@ -77,10 +77,49 @@ import { useAppStore } from './store/app'
 import AppEmptyState from './components/atoms/AppEmptyState.vue'
 import { usePopupStore } from './store/popup'
 import ConnectPopup from './components/popups/ConnectPopup.vue'
-import { computed } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
+import { consumeQuickConnect } from './composables/useQuickConnect'
+import { useConnectionHistory } from './composables/useConnectionHistory'
+import { useNotificationStore } from './store/notification'
 
 const store = useAppStore()
-const { openPopup } = usePopupStore()
+const { openPopup, close } = usePopupStore()
+const { error } = useNotificationStore()
+const { saveConnection } = useConnectionHistory()
+
+// Opened with #connect=...&password=... by another page: connect straight away.
+// Also when the link lands in a tab that already has Workbench open, where
+// only the fragment changes and the page does not reload.
+const quickConnect = async () => {
+  const connection = consumeQuickConnect()
+
+  if (!connection) {
+    return
+  }
+
+  // The connect form opens on start; with a link there is nothing to ask.
+  close()
+
+  try {
+    await store.connect(connection)
+    saveConnection(connection)
+  } catch (e) {
+    error({
+      type: 'error',
+      title: 'Connection error',
+      message: 'Could not connect to the server from the link'
+    })
+    console.error(e)
+    openPopup(ConnectPopup)
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('hashchange', quickConnect)
+  quickConnect()
+})
+
+onUnmounted(() => window.removeEventListener('hashchange', quickConnect))
 
 const transferred = computed(() => {
   return (store.bandwidth.bytesTransferred / 1024 / 1024).toFixed(2)

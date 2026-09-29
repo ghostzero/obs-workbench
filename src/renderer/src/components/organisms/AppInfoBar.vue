@@ -19,7 +19,7 @@
         <p class="text-sm font-medium text-zinc-100">
           Connected to
           <b class="text-zinc-400">
-            ws://{{ store.connection.ip }}:{{ store.connection.port }}
+            {{ connectionUrl(store.connection) }}
           </b>
         </p>
       </div>
@@ -83,7 +83,7 @@
 
 <script setup lang="ts">
 import AppInfoBadge from '../atoms/AppInfoBadge.vue'
-import { useAppStore } from '../../store/app'
+import { connectionUrl, useAppStore } from '../../store/app'
 import { useUserStore } from '../../store/user'
 import { storeToRefs } from 'pinia'
 
